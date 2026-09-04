@@ -31,3 +31,6 @@ jobs:
 
       - name: Validate LAD solver
         run: python scripts/validate_lad.py
+
+      - name: Fit OLS and LAD baselines
+        run: python scripts/fit_baseline_models.py

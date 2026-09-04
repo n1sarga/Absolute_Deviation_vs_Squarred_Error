@@ -20,6 +20,7 @@ dependencies = [
 [project.scripts]
 analyze-outliers = "outlier_analysis.pipeline:main"
 validate-lad = "outlier_analysis.lad_validation:main"
+fit-baseline-models = "outlier_analysis.baseline:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

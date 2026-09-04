@@ -31,6 +31,14 @@ Blue = regular, yellow = leverage only, red = response only, and purple = both.*
 median-regression reference predictions. All four objectives agree within
 floating-point error.*
 
+## Full-data OLS and LAD baselines
+
+![Full-data OLS and LAD baseline fits for all four datasets](outputs/figures/merged_baseline_ols_lad_fits.png)
+
+*Figure 4. Actual responses versus full-data OLS and LAD predictions. OLS
+minimizes squared error; LAD minimizes absolute error. These in-sample fits are
+descriptive baselines, not estimates of performance on unseen data.*
+
 ## Repository layout
 
 ```text
@@ -60,6 +68,7 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 python scripts/analyze_outliers.py
 python scripts/validate_lad.py
+python scripts/fit_baseline_models.py
 ```
 
 After installation, this equivalent command is also available:
@@ -67,6 +76,7 @@ After installation, this equivalent command is also available:
 ```powershell
 analyze-outliers
 validate-lad
+fit-baseline-models
 ```
 
 ## Test
@@ -80,11 +90,14 @@ python -m pytest
 
 - `outputs/figures/`: one diagram per dataset and one merged diagram;
 - `outputs/results/`: joint outlier results plus regression-specific leverage and
-  response classifications, LAD validation metrics, and predictions.
+  response classifications, LAD validation results, and full-data OLS/LAD
+  metrics, coefficients, and predictions.
 
 Blue points are inliers. Red points are robust-distance outliers. A flag means
 that a row is unusual relative to the central multivariate pattern; it does not
 automatically mean the observation is erroneous.
 
 See [outlier method notes](docs/outlier_method.md) and
-[LAD solver notes](docs/lad_solver.md) for calculation details.
+[LAD solver notes](docs/lad_solver.md) for calculation details. The
+[baseline model notes](docs/baseline_models.md) describe the full-data OLS/LAD
+comparison and its limits.
