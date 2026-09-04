@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "robust-outlier-analysis"
+name = "absolute-deviation-regression"
 version = "0.1.0"
-description = "Reproducible multivariate outlier analysis for robust-regression datasets"
+description = "Reproducible outlier analysis and least-absolute-deviation regression"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -19,6 +19,7 @@ dependencies = [
 
 [project.scripts]
 analyze-outliers = "outlier_analysis.pipeline:main"
+validate-lad = "outlier_analysis.lad_validation:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -28,3 +28,6 @@ jobs:
 
       - name: Run analysis workflow
         run: python scripts/analyze_outliers.py
+
+      - name: Validate LAD solver
+        run: python scripts/validate_lad.py

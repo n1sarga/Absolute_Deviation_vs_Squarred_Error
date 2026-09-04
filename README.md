@@ -23,6 +23,14 @@ are inliers; red points are observations flagged as multivariate outliers.*
 *Figure 2. Predictor-space leverage versus conditional response deviation.
 Blue = regular, yellow = leverage only, red = response only, and purple = both.*
 
+## LP-based LAD solver
+
+![LP-based LAD predictions compared with reference median regression](outputs/figures/lad_solver_validation.png)
+
+*Figure 3. Custom sparse linear-programming LAD predictions versus unpenalized
+median-regression reference predictions. All four objectives agree within
+floating-point error.*
+
 ## Repository layout
 
 ```text
@@ -51,12 +59,14 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 python scripts/analyze_outliers.py
+python scripts/validate_lad.py
 ```
 
 After installation, this equivalent command is also available:
 
 ```powershell
 analyze-outliers
+validate-lad
 ```
 
 ## Test
@@ -70,11 +80,11 @@ python -m pytest
 
 - `outputs/figures/`: one diagram per dataset and one merged diagram;
 - `outputs/results/`: joint outlier results plus regression-specific leverage and
-  response classifications.
+  response classifications, LAD validation metrics, and predictions.
 
 Blue points are inliers. Red points are robust-distance outliers. A flag means
 that a row is unusual relative to the central multivariate pattern; it does not
 automatically mean the observation is erroneous.
 
-See [the method notes](docs/outlier_method.md) for calculation details and
-dataset-specific caveats.
+See [outlier method notes](docs/outlier_method.md) and
+[LAD solver notes](docs/lad_solver.md) for calculation details.
