@@ -34,3 +34,6 @@ jobs:
 
       - name: Fit OLS and LAD baselines
         run: python scripts/fit_baseline_models.py
+
+      - name: Run robustness experiments
+        run: python scripts/run_robustness_experiments.py

@@ -39,6 +39,15 @@ floating-point error.*
 minimizes squared error; LAD minimizes absolute error. These in-sample fits are
 descriptive baselines, not estimates of performance on unseen data.*
 
+## Sample-condition and contamination experiments
+
+![OLS and LAD sensitivity to observed and artificial outliers](outputs/figures/merged_condition_contamination_comparison.png)
+
+*Figure 5. Clean-reference MAE after contaminating 0%, 5%, 10%, or 20% of
+regular-row responses. Solid lines are means across 30 repetitions with
+one-standard-deviation error bars. Dotted lines show complete-data fits on the
+same regular rows.*
+
 ## Repository layout
 
 ```text
@@ -69,6 +78,7 @@ python -m pip install -r requirements.txt
 python scripts/analyze_outliers.py
 python scripts/validate_lad.py
 python scripts/fit_baseline_models.py
+python scripts/run_robustness_experiments.py
 ```
 
 After installation, this equivalent command is also available:
@@ -77,6 +87,7 @@ After installation, this equivalent command is also available:
 analyze-outliers
 validate-lad
 fit-baseline-models
+run-robustness-experiments
 ```
 
 ## Test
@@ -91,7 +102,7 @@ python -m pytest
 - `outputs/figures/`: one diagram per dataset and one merged diagram;
 - `outputs/results/`: joint outlier results plus regression-specific leverage and
   response classifications, LAD validation results, and full-data OLS/LAD
-  metrics, coefficients, and predictions.
+  metrics, coefficients, predictions, and contamination sensitivity results.
 
 Blue points are inliers. Red points are robust-distance outliers. A flag means
 that a row is unusual relative to the central multivariate pattern; it does not
@@ -100,4 +111,5 @@ automatically mean the observation is erroneous.
 See [outlier method notes](docs/outlier_method.md) and
 [LAD solver notes](docs/lad_solver.md) for calculation details. The
 [baseline model notes](docs/baseline_models.md) describe the full-data OLS/LAD
-comparison and its limits.
+comparison. The [robustness experiment notes](docs/robustness_experiments.md)
+define the full-data, inlier-only, and controlled-contamination protocol.
