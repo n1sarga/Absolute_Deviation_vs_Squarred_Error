@@ -1,27 +1,70 @@
 # Outlier Analysis
 
-Unified row-level outlier detection for Boston Housing, Concrete Strength, HBK,
-and supplied synthetic data.
+Unified diagnostics for Boston Housing, Concrete Strength,
+Hawkins-Bradu-Kass (HBK), and supplied synthetic data.
 
-## Method
+## 1. Joint data-distribution screening
+
+This exploratory view finds rows unusual in the combined predictor-response
+space:
 
 1. Exclude identifiers and text labels.
-2. Robust-scale all measurement and response columns.
-3. Fit Minimum Covariance Determinant with 70% support.
+2. Robust-scale all selected predictors and the response.
+3. Fit Minimum Covariance Determinant (MCD) with 70% support.
 4. Calculate robust Mahalanobis distance in full-dimensional space.
-5. Flag rows beyond 97.5% chi-square cutoff for dataset dimensionality.
-6. Project robust-scaled data to two PCA dimensions for display only.
+5. Flag distances beyond the 97.5% chi-square cutoff.
+6. Use PCA only to display the robust-scaled data in two dimensions.
 
-PCA does not determine flags. Red points are robust-distance outliers; blue
-points are inliers. Flags mean unusual relative to central multivariate pattern,
-not necessarily data errors. Skewed or multi-cluster datasets can produce many
-flags because ellipsoidal-distance assumptions fit them poorly.
+These flags are not used to distinguish regression-outlier mechanisms.
 
-Boston variable `B` is excluded because it encodes an ethically problematic
-racial assumption. All other Boston predictor and response columns are used.
+## 2. Regression-specific classification
 
-For the updated synthetic dataset, `X1`, `X2`, `X3`, and `y` are analyzed
-jointly; `ID` is used only as a row identifier.
+Each dataset declares predictor matrix `X` and response `y` separately.
+
+### Predictor leverage
+
+Predictors are robust-scaled. MCD is fitted in predictor space only. Observation
+`i` is a leverage point when
+
+```text
+sqrt((x_i - robust_center)' robust_covariance^-1
+     (x_i - robust_center)) > sqrt(chi2_0.975,p)
+```
+
+where `p` is predictor count.
+
+### Conditional response outlier
+
+An unpenalized median regression (`quantile=0.5`) provides a robust diagnostic
+fit. Its residuals are centered at their median and scaled using
+`1.4826 * MAD`. Observation `i` is a conditional response outlier when its
+absolute robust residual z-score exceeds `3.5`.
+
+Median regression here supports classification only. It is not the later
+OLS-versus-LAD performance experiment.
+
+### Mutually exclusive classes
+
+| Leverage flag | Response flag | Class |
+|---|---|---|
+| No | No | Regular |
+| Yes | No | Leverage only |
+| No | Yes | Response only |
+| Yes | Yes | Leverage + response |
+
+Blue, yellow, red, and purple represent these four classes respectively.
+
+## Interpretation limits
+
+- A flag means unusual, not necessarily erroneous.
+- MCD assumes an approximately ellipsoidal central predictor distribution.
+  Skewed or multi-cluster data can produce many leverage flags.
+- Classification currently describes each complete dataset. Future predictive
+  experiments must refit every detector within each training fold to avoid
+  information leakage.
+- Boston variable `B` is excluded because it encodes an ethically problematic
+  racial assumption.
+- Synthetic `ID` and HBK `Observation` are identifiers, not predictors.
 
 ## Run
 
@@ -32,17 +75,23 @@ python scripts/analyze_outliers.py
 ## Code layout
 
 ```text
-scripts/analyze_outliers.py       # Small command-line entry point
+scripts/analyze_outliers.py
 src/outlier_analysis/
-|-- config.py                    # Settings and dataset definitions
-|-- detection.py                 # Loading, validation, and calculation
-|-- plotting.py                  # Individual and merged diagrams
-`-- pipeline.py                  # Execution, CSV output, and summaries
+|-- config.py                    # Dataset roles and thresholds
+|-- detection.py                 # Joint distribution screening
+|-- plotting.py                  # Joint distribution figures
+|-- classification.py            # Leverage/response classification
+|-- classification_plotting.py   # Classification figures
+`-- pipeline.py                  # Execution and saved outputs
 ```
 
-Outputs:
+## Outputs
 
-- four individual distribution diagrams in `outputs/figures/`;
+- `outputs/figures/*_outlier_distribution.png`;
 - `outputs/figures/merged_outlier_distributions.png`;
-- one row-level flagged CSV per dataset in `outputs/results/`;
-- `outputs/results/outlier_summary.csv`.
+- `outputs/figures/*_outlier_classification.png`;
+- `outputs/figures/merged_outlier_classifications.png`;
+- `outputs/results/*_outliers.csv`;
+- `outputs/results/outlier_summary.csv`;
+- `outputs/results/*_outlier_classification.csv`;
+- `outputs/results/outlier_classification_summary.csv`.

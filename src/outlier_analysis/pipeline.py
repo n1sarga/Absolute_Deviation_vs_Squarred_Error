@@ -4,6 +4,15 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+from .classification import (
+    RegressionOutlierClassification,
+    classification_summary_row,
+    classify_regression_outliers,
+)
+from .classification_plotting import (
+    save_classification_figure,
+    save_merged_classification_figure,
+)
 from .config import DATASETS, FIGURE_DIR, RESULT_DIR
 from .detection import OutlierAnalysis, calculate_outliers, load_dataset
 from .plotting import save_individual_figure, save_merged_figure
@@ -47,16 +56,28 @@ def run() -> pd.DataFrame:
 
     analyses: list[OutlierAnalysis] = []
     summary_rows: list[dict[str, object]] = []
+    classifications: list[RegressionOutlierClassification] = []
+    classification_rows: list[dict[str, object]] = []
     for spec in DATASETS:
-        analysis = calculate_outliers(spec, load_dataset(spec))
+        data = load_dataset(spec)
+        analysis = calculate_outliers(spec, data)
+        classification = classify_regression_outliers(spec, data)
         analyses.append(analysis)
         summary_rows.append(summary_row(analysis))
+        classifications.append(classification)
+        classification_rows.append(classification_summary_row(classification))
         analysis.result.to_csv(
             RESULT_DIR / f"{spec.slug}_outliers.csv",
             index=False,
             float_format="%.6f",
         )
+        classification.result.to_csv(
+            RESULT_DIR / f"{spec.slug}_outlier_classification.csv",
+            index=False,
+            float_format="%.6f",
+        )
         save_individual_figure(analysis)
+        save_classification_figure(classification)
 
     summary = pd.DataFrame(summary_rows)
     summary.to_csv(
@@ -64,8 +85,15 @@ def run() -> pd.DataFrame:
         index=False,
         float_format="%.4f",
     )
+    classification_summary = pd.DataFrame(classification_rows)
+    classification_summary.to_csv(
+        RESULT_DIR / "outlier_classification_summary.csv",
+        index=False,
+        float_format="%.4f",
+    )
     save_merged_figure(analyses)
-    print_summary(summary)
+    save_merged_classification_figure(classifications)
+    print_summary(summary, classification_summary)
     return summary
 
 
@@ -75,12 +103,19 @@ def main() -> None:
     run()
 
 
-def print_summary(summary: pd.DataFrame) -> None:
+def print_summary(
+    summary: pd.DataFrame,
+    classification_summary: pd.DataFrame,
+) -> None:
     """Print compact results and output locations."""
 
     display = summary.copy()
     display["DistanceCutoff"] = display["DistanceCutoff"].round(3)
     display["OutlierPercent"] = display["OutlierPercent"].round(1)
     print(display.fillna("-").to_string(index=False))
+    print("\nRegression outlier classes:")
+    class_display = classification_summary.copy()
+    class_display["LeverageCutoff"] = class_display["LeverageCutoff"].round(3)
+    print(class_display.fillna("-").to_string(index=False))
     print(f"\nFigures: {FIGURE_DIR}")
     print(f"Outlier tables: {RESULT_DIR}")

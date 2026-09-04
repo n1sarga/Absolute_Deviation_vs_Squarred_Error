@@ -6,7 +6,7 @@ These files are reproducible products of:
 python scripts/analyze_outliers.py
 ```
 
-- `figures/` contains four individual distribution diagrams and one merged
-  comparison.
-- `results/` contains row-level robust distances and flags plus the combined
-  summary.
+- `figures/` contains individual and merged diagrams for joint distributions
+  and regression-specific outlier classes.
+- `results/` contains row-level joint distances, leverage/response classes, and
+  both combined summary tables.

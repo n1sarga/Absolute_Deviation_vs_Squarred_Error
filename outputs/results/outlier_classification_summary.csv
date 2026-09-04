@@ -1,0 +1,5 @@
+Dataset,Rows,Predictors,LeverageCutoff,ResidualZCutoff,Regular,LeverageOnly,ResponseOnly,LeverageAndResponse,AnyFlagged,KnownOutliers,KnownClassified,AdditionalClassified,KnownMissed
+Boston Housing,506,12,4.8308,3.5000,357,130,8,11,149,,,,
+Concrete Strength,1030,8,4.1874,3.5000,837,177,2,14,193,,,,
+Hawkins-Bradu-Kass (HBK),75,3,3.0575,3.5000,61,10,0,4,14,14.0000,14.0000,0.0000,0.0000
+Synthetic OLS-LAD,90,3,3.0575,3.5000,78,10,0,2,12,,,,

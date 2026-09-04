@@ -9,12 +9,19 @@ center and covariance with Minimum Covariance Determinant (MCD), and flags rows
 whose robust Mahalanobis distance exceeds the 97.5% chi-square cutoff. PCA is
 used only to visualize the distributions.
 
-## Outlier distributions
+## Joint data-distribution outliers
 
 ![Merged robust multivariate outlier distributions for all four datasets](outputs/figures/merged_outlier_distributions.png)
 
 *Figure 1. Robust-scaled PCA distributions for the four datasets. Blue points
 are inliers; red points are observations flagged as multivariate outliers.*
+
+## Regression outlier classification
+
+![Merged leverage and response outlier classifications](outputs/figures/merged_outlier_classifications.png)
+
+*Figure 2. Predictor-space leverage versus conditional response deviation.
+Blue = regular, yellow = leverage only, red = response only, and purple = both.*
 
 ## Repository layout
 
@@ -62,7 +69,8 @@ python -m pytest
 ## Outputs
 
 - `outputs/figures/`: one diagram per dataset and one merged diagram;
-- `outputs/results/`: row-level distances/flags and `outlier_summary.csv`.
+- `outputs/results/`: joint outlier results plus regression-specific leverage and
+  response classifications.
 
 Blue points are inliers. Red points are robust-distance outliers. A flag means
 that a row is unusual relative to the central multivariate pattern; it does not

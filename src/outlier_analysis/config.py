@@ -7,6 +7,7 @@ from pathlib import Path
 RANDOM_STATE = 42
 SUPPORT_FRACTION = 0.70
 CUTOFF_PROBABILITY = 0.975
+RESIDUAL_Z_CUTOFF = 3.5
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 FIGURE_DIR = PROJECT_ROOT / "outputs" / "figures"
@@ -16,6 +17,12 @@ STATUS_COLUMN = "OutlierStatus"
 DISTANCE_COLUMN = "RobustDistance"
 FLAG_COLUMN = "OutlierFlag"
 COLORS = {"Inlier": "#4C78A8", "Outlier": "#E45756"}
+CLASS_COLORS = {
+    "Regular": "#4C78A8",
+    "Leverage only": "#F2CF5B",
+    "Response only": "#E45756",
+    "Leverage + response": "#B279A2",
+}
 
 
 @dataclass(frozen=True)
@@ -25,10 +32,17 @@ class DatasetSpec:
     name: str
     slug: str
     path: Path
-    variables: tuple[str, ...]
+    predictors: tuple[str, ...]
+    response: str
     id_column: str | None = None
     read_kwargs: dict | None = None
     known_label: str | None = None
+
+    @property
+    def variables(self) -> tuple[str, ...]:
+        """All numeric columns used by the joint distribution analysis."""
+
+        return self.predictors + (self.response,)
 
 
 DATASETS = (
@@ -37,27 +51,30 @@ DATASETS = (
         slug="boston_housing",
         path=PROJECT_ROOT / "data" / "processed" / "boston_housing.csv",
         # B excluded because it encodes an ethically problematic racial assumption.
-        variables=(
+        predictors=(
             "CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE",
-            "DIS", "RAD", "TAX", "PTRATIO", "LSTAT", "MEDV",
+            "DIS", "RAD", "TAX", "PTRATIO", "LSTAT",
         ),
+        response="MEDV",
         read_kwargs={"skiprows": 1},
     ),
     DatasetSpec(
         name="Concrete Strength",
         slug="concrete_strength",
         path=PROJECT_ROOT / "data" / "processed" / "concrete_strength.csv",
-        variables=(
+        predictors=(
             "Cement", "BlastFurnaceSlag", "FlyAsh", "Water",
             "Superplasticizer", "CoarseAggregate", "FineAggregate",
-            "Age", "Strength",
+            "Age",
         ),
+        response="Strength",
     ),
     DatasetSpec(
         name="Hawkins-Bradu-Kass (HBK)",
         slug="hbk",
         path=PROJECT_ROOT / "data" / "processed" / "hbk.csv",
-        variables=("X1", "X2", "X3", "Y"),
+        predictors=("X1", "X2", "X3"),
+        response="Y",
         id_column="Observation",
         known_label="hbk",
     ),
@@ -65,7 +82,8 @@ DATASETS = (
         name="Synthetic OLS-LAD",
         slug="synthetic",
         path=PROJECT_ROOT / "data" / "processed" / "synthetic_ols_lad_outliers.csv",
-        variables=("X1", "X2", "X3", "y"),
+        predictors=("X1", "X2", "X3"),
+        response="y",
         id_column="ID",
     ),
 )
