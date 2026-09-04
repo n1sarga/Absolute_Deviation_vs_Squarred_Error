@@ -9,6 +9,13 @@ center and covariance with Minimum Covariance Determinant (MCD), and flags rows
 whose robust Mahalanobis distance exceeds the 97.5% chi-square cutoff. PCA is
 used only to visualize the distributions.
 
+## Outlier distributions
+
+![Merged robust multivariate outlier distributions for all four datasets](outputs/figures/merged_outlier_distributions.png)
+
+*Figure 1. Robust-scaled PCA distributions for the four datasets. Blue points
+are inliers; red points are observations flagged as multivariate outliers.*
+
 ## Repository layout
 
 ```text
