@@ -1,117 +1,121 @@
-# Regression by Minimizing Absolute Deviation: Final Research Summary
+# Regression by Minimizing Absolute Deviation
 
-## Research objective
+## 1. Introduction
 
-Compare ordinary least squares (OLS), which minimizes squared residuals, with
-least absolute deviations (LAD), which minimizes absolute residuals. Main focus:
-fit quality, response-outlier resistance, coefficient and prediction stability,
-runtime, and out-of-sample absolute error.
+Least squares and least absolute deviations are two long-established criteria for fitting linear regression models. Least squares minimizes squared residuals, while least absolute deviations (LAD) minimizes absolute residuals. The supplied literature motivates LAD as an alternative when extreme errors or long-tailed error distributions make squared-error fitting sensitive to a small number of large residuals.
 
-## Data and model
+This project is deliberately restricted to the ideas and methods contained in the supplied LAD literature. The rebuilt repository therefore focuses on the OLS/LAD objective functions, the linear-programming formulation of LAD, direct response-error robustness experiments, error distributions discussed by the papers, and computational comparison. Modern outlier-screening and validation techniques that are not part of the supplied methodological basis are excluded.
 
-Four linear-regression datasets were analyzed: Boston Housing, Concrete
-Strength from Yeh (1998), Hawkins-Bradu-Kass (HBK), and supplied synthetic
-OLS-LAD data. Identifier fields were excluded. Boston variable `B` was excluded
-because it encodes an ethically problematic racial assumption.
+## 2. Research objective
 
-Custom LAD solves sparse linear program derived from Wagner's formulation.
-Independent validation against unpenalized median regression gave matching
-absolute-error objectives within floating-point precision. Both OLS and LAD
-use median/IQR scaling for numerical conditioning and return parameters in
-original units.
+The primary research question is:
 
-## Experimental sequence
+> How does regression obtained by minimizing absolute deviations differ from regression obtained by minimizing squared deviations, particularly when observations contain large or extreme errors?
 
-1. Robust multivariate screening and regression-specific classification.
-2. LP-based LAD implementation and reference validation.
-3. Full-data OLS/LAD descriptive baselines.
-4. Full-data, regular-row, and repeated artificial-contamination fits.
-5. Paired error, prediction drift, slope shift, and runtime comparisons.
-6. Repeated cross-validation, paired bootstrap intervals, and multiplicity-
-   adjusted randomization tests.
+The secondary objectives are to explain the LP formulation of LAD, compare OLS and LAD on the same datasets, examine changes under large vertical response errors, study Normal versus long-tailed error distributions, and compare computational cost.
 
-## Controlled-contamination finding
+## 3. Literature basis
 
-At 20% response contamination, LAD reduced clean-reference MAE relative to OLS
-by 39.5% to 87.2%. Prediction drift fell 82.6% to 97.3%; standardized slope
-shift fell 83.4% to 97.5%. LAD won clean MAE in all 120 paired repetitions.
+Wagner (1959) establishes the linear-programming treatment of absolute-deviation regression. Barrodale and Roberts (1973) develop an efficient algorithm for discrete L1 linear approximation and show the computational importance of specialized simplex methods. Bassett and Koenker (1978) give an asymptotic theory of least absolute error regression and emphasize its relevance for longer-tailed error distributions. Bloomfield and Steiger (1980) study LAD curve fitting, computational methods, and reduced sensitivity to extreme errors. Narula and Wellington (1982) provide a state-of-the-art survey of minimum-sum-of-absolute-errors regression, including robustness, algorithms, and non-Gaussian error settings. Pollard (1991) develops further asymptotic theory using convexity arguments. Amemiya (1982) extends LAD ideas to simultaneous-equation models, and Powell (1984) extends them to censored regression. The latter two are treated as literature extensions rather than implemented models in this standard linear-regression project.
 
-This result supports LAD resistance to severe vertical response outliers under
-the chosen contaminated-normal protocol. It does not imply equal protection
-from high-leverage predictor contamination.
+## 4. Mathematical formulation
 
-## Out-of-fold validation
+For observations `(x_i, y_i)`, OLS estimates `beta` by minimizing
 
-Reported values below use each observation's out-of-fold predictions averaged
-across 10 repetitions of 5-fold cross-validation.
-
-| Dataset | OLS MAE | LAD MAE | LAD reduction | LAD − OLS MAE | 95% bootstrap CI | Holm p |
-|---|---:|---:|---:|---:|---:|---:|
-| Boston Housing | 3.450 | 3.295 | 4.49% | -0.155 | [-0.278, -0.033] | 0.056 |
-| Concrete Strength | 8.306 | 8.223 | 1.00% | -0.083 | [-0.259, 0.098] | 0.741 |
-| Hawkins-Bradu-Kass | 1.519 | 1.308 | 13.91% | -0.211 | [-0.485, 0.083] | 0.454 |
-| Synthetic OLS-LAD | 3.347 | 3.309 | 1.13% | -0.038 | [-0.418, 0.395] | 0.860 |
-
-LAD point estimates have lower MAE in every dataset. Boston's ordinary 95%
-paired-bootstrap interval excludes zero, but no dataset passes Holm-adjusted
-family-wise alpha 0.05; Boston is borderline at 0.056. Evidence therefore does
-not establish general out-of-sample MAE superiority across all four datasets.
-
-OLS has lower out-of-fold RMSE in every dataset. Concrete's RMSE difference is
-clearly separated from zero; other RMSE intervals include zero. This agrees
-with each method's loss: LAD targets typical absolute error, while OLS places
-more weight on large errors.
-
-## Computational trade-off
-
-Custom LP-based LAD took roughly 8 to 133 times OLS median fit time on inlier
-samples in recorded environment. Absolute fits remained below about 100 ms for
-these dataset sizes, but runtime ratios are hardware-, solver-, and load-specific.
-
-## Conclusion
-
-LAD is preferred when response outliers, heavy-tailed errors, median behavior,
-or absolute-error loss dominate research goals. It showed much stronger
-parameter and prediction stability under severe response contamination.
-
-OLS remains preferred when squared-error performance, computational speed, or
-approximately Gaussian light-tailed errors dominate. Current cross-validation
-does not justify claiming universal LAD superiority. Best conclusion: LAD gives
-robustness benefit with computational and RMSE trade-offs; choice must follow
-loss function and contamination risk.
-
-## Limitations
-
-- No independent external test datasets.
-- Linear specification only; nonlinear structure remains untreated.
-- Bootstrap resamples fixed out-of-fold predictions and conditions on fitted
-  CV models; it does not refit entire pipeline within every bootstrap sample.
-- Row bootstrap and randomization assume observations form exchangeable pairs.
-- HBK and synthetic datasets are small; interval uncertainty is wide.
-- Boston target is capped and dataset carries known ethical/historical limits.
-- LAD resists vertical response outliers but can remain vulnerable to leverage.
-- Artificial noise scale is deliberately severe and represents one scenario.
-- Runtime results are machine-specific.
-
-## Reproduction
-
-```powershell
-python scripts/analyze_outliers.py
-python scripts/validate_lad.py
-python scripts/fit_baseline_models.py
-python scripts/run_robustness_experiments.py
-python scripts/evaluate_models.py
-python scripts/run_final_analysis.py
-python -m pytest
+```text
+sum_i (y_i - x_i^T beta)^2.
 ```
 
-## Literature basis
+LAD estimates `beta` by minimizing
 
-- Wagner (1959), *Linear Programming Techniques for Regression Analysis*.
-- Barrodale and Roberts (1973), *An Improved Algorithm for Discrete L1 Linear
-  Approximation*.
-- Bassett and Koenker (1978), *Asymptotic Theory of Least Absolute Error
-  Regression*.
-- Narula and Wellington (1982), *The Minimum Sum of Absolute Errors Regression:
-  A State of the Art Survey*.
-- Yeh (1998), Concrete Strength dataset publication.
+```text
+sum_i |y_i - x_i^T beta|.
+```
+
+The square grows faster than the absolute value, so a large residual contributes more strongly to the OLS objective than to the LAD objective. This is the central mathematical reason the supplied literature discusses LAD as less sensitive to extreme errors.
+
+## 5. Linear-programming formulation of LAD
+
+Following the literature-supported LP formulation, each residual is written as
+
+```text
+y_i - x_i^T beta = e_i^+ - e_i^-
+```
+
+with
+
+```text
+e_i^+ >= 0
+e_i^- >= 0.
+```
+
+The LAD problem then becomes
+
+```text
+minimize sum_i (e_i^+ + e_i^-).
+```
+
+The repository implements this formulation directly with a modern linear-programming solver. This preserves the mathematical program described in the literature while avoiding a false claim that the code reproduces a particular historical simplex implementation.
+
+## 6. Datasets
+
+The experimental datasets are Boston Housing, Concrete Compressive Strength, Hawkins-Bradu-Kass (HBK), and a synthetic multivariate OLS/LAD dataset. The datasets are used to illustrate the literature-defined regression criteria; they do not determine the methodology.
+
+Data preparation is intentionally minimal. Identifier or non-numeric descriptive fields are excluded where needed, missing rows are removed transparently, and the same usable observations are passed to OLS and LAD. Extreme observations are not automatically removed because the project is specifically interested in how the two loss criteria respond to large errors.
+
+## 7. Experimental method
+
+### 7.1 Original-data comparison
+
+OLS and LAD are fitted to the same rows and predictors for every dataset. Coefficients, SSE, SAE, MAE, RMSE, and runtime are reported. The comparison is descriptive and tied directly to the two objective functions: OLS is expected to minimize SSE, while LAD is expected to minimize SAE.
+
+### 7.2 Large response-error experiment
+
+A synthetic linear dataset is fitted in an uncontaminated state and after deliberately adding large errors to selected response values. The project records coefficient change, prediction change, MAE and RMSE relative to the uncontaminated response, and runtime. The exact contamination levels and magnitude are project-selected illustration settings and are not claimed to be prescribed by the papers.
+
+### 7.3 Error-distribution experiment
+
+The simulation compares Normal, Laplace, Cauchy, and contaminated-normal errors because these settings are directly motivated by the supplied literature's discussion of Gaussian, double-exponential, long-tailed, and contaminated distributions. OLS and LAD are compared using coefficient estimation error and both squared- and absolute-error measures.
+
+### 7.4 Computational comparison
+
+OLS and LP-based LAD are timed for several sample sizes and numbers of predictors. The purpose is to illustrate the computational trade-off discussed in Wagner, Barrodale-Roberts, Bloomfield-Steiger, and Narula-Wellington. Runtime is treated as solver-, hardware-, and data-dependent.
+
+## 8. Results
+
+All numerical results are generated reproducibly by:
+
+```text
+python scripts/generate_all_results.py
+```
+
+The script creates original-data metrics and coefficients, contamination results, error-distribution results, runtime results, solver validation results, and accompanying figures. Results are not hard-coded into this document so that the report remains synchronized with the current code and datasets.
+
+A defining correctness check is included: for deterministic examples, the OLS solution must have SSE no greater than the SSE evaluated at the LAD coefficients, and the LAD solution must have SAE no greater than the SAE evaluated at the OLS coefficients. These checks follow directly from the two optimization criteria.
+
+## 9. Discussion
+
+The literature-supported expectation is not that LAD always dominates OLS. Rather, each estimator directly optimizes a different loss function. OLS is naturally favored when squared error and approximately Gaussian light-tailed errors are central. LAD is naturally favored when absolute error, median behavior, large vertical response errors, or long-tailed distributions are more important.
+
+The response-error experiment is designed to illustrate the robustness claim made throughout the supplied literature: when a small number of response values are made very large, the squared-loss fit can move substantially because the largest residuals receive very high weight, while the absolute-loss fit is typically less affected. The error-distribution experiment complements this by examining Normal, Laplace, Cauchy, and contaminated-normal settings without adding external inferential machinery.
+
+The computational comparison also reflects a recurring literature theme. Least squares has a particularly simple numerical solution, whereas LAD historically motivated linear-programming and specialized L1 algorithms. The rebuilt repository therefore treats runtime as a trade-off rather than evidence against LAD.
+
+## 10. Limitations
+
+The project is restricted to standard linear LAD. Amemiya's two-stage LAD and Powell's censored LAD are not implemented. LAD should not be described as immune to every kind of unusual observation; extreme predictor configurations can still be problematic. The contamination experiment is illustrative and its exact percentages and magnitudes are project settings. Synthetic error-distribution results depend on sample size and simulation design. The absolute-value objective is non-differentiable, and the modern LP solver used here is not the same as the historical algorithms studied in the papers. Runtime is machine-specific.
+
+## 11. Conclusion
+
+Regression by minimizing absolute deviation provides a principled alternative to least squares when the research problem is better represented by absolute loss or when large vertical errors and long-tailed distributions make squared-error fitting unstable. The supplied literature supports this interpretation through statistical theory, robust-error motivation, linear-programming formulations, and computational algorithms. Least squares remains important when squared-error performance, computational simplicity, and approximately Gaussian light-tailed errors dominate. The appropriate choice therefore follows the loss function and error behavior rather than a claim that one method is universally superior.
+
+## References
+
+- Amemiya, T. (1982). *Two Stage Least Absolute Deviations Estimators*.
+- Barrodale, I. and Roberts, F. D. K. (1973). *An Improved Algorithm for Discrete l1 Linear Approximation*.
+- Bassett, G. and Koenker, R. (1978). *Asymptotic Theory of Least Absolute Error Regression*.
+- Bloomfield, P. and Steiger, W. (1980). *Least Absolute Deviations Curve-Fitting*.
+- Narula, S. C. and Wellington, J. F. (1982). *The Minimum Sum of Absolute Errors Regression: A State of the Art Survey*.
+- Pollard, D. (1991). *Asymptotics for Least Absolute Deviation Regression Estimators*.
+- Powell, J. L. (1984). *Least Absolute Deviations Estimation for the Censored Regression Model*.
+- Wagner, H. M. (1959). *Linear Programming Techniques for Regression Analysis*.
