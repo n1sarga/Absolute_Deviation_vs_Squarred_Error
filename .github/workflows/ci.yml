@@ -5,7 +5,7 @@ on:
   pull_request:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   test:
@@ -28,3 +28,16 @@ jobs:
 
       - name: Regenerate literature-aligned results
         run: python scripts/generate_all_results.py
+
+      - name: Commit generated results and visualizations
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add outputs/
+          if git diff --cached --quiet; then
+            echo "No generated output changes to commit."
+          else
+            git commit -m "Add generated LAD visualizations and results [skip ci]"
+            git push
+          fi
