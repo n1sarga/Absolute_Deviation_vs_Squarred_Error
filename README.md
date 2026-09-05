@@ -8,7 +8,7 @@ The complete executed workflow is available in [`absolute_deviation_full_workflo
 
 1. Load and prepare the three empirical datasets. [`data.py`](src/absolute_deviation/data.py)
 2. Fit OLS and LAD models using the same observations and predictors. [`models.py`](src/absolute_deviation/models.py)
-3. Compare SSE, SAE, MAE, RMSE, coefficients, and runtime. [`experiments.py`](src/absolute_deviation/experiments.py)
+3. Compare SSE and SAE. [`experiments.py`](src/absolute_deviation/experiments.py)
 4. Visualize fitted values and multivariate residual behavior. [`plotting.py`](src/absolute_deviation/plotting.py)
 5. Run the controlled large-response-error experiment. [`experiments.py`](src/absolute_deviation/experiments.py)
 6. Compare OLS and LAD under Normal, Laplace, Cauchy, and contaminated-normal errors. [`experiments.py`](src/absolute_deviation/experiments.py)
