@@ -1,6 +1,7 @@
 import numpy as np
 
 from absolute_deviation.data import DATASETS
+from absolute_deviation.experiments import run_error_distribution_experiment
 from absolute_deviation.models import fit_lad, fit_ols, regression_metrics
 
 
@@ -40,3 +41,14 @@ def test_lad_multiple_predictors():
     lad = fit_lad(X, y)
     assert lad.success
     assert np.allclose(lad.fitted, y, atol=1e-8)
+
+
+def test_distribution_experiment_uses_three_errors_and_sse_sae(tmp_path, monkeypatch):
+    import absolute_deviation.experiments as exp
+
+    monkeypatch.setattr(exp, "RESULT_DIR", tmp_path / "results")
+    monkeypatch.setattr(exp, "FIGURE_DIR", tmp_path / "figures")
+    result = run_error_distribution_experiment(repetitions=1, n=20, seed=77)
+
+    assert set(result["distribution"]) == {"normal", "laplace", "cauchy"}
+    assert list(result.columns) == ["repetition", "distribution", "model", "SSE", "SAE"]
