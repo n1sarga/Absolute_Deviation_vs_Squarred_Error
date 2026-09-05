@@ -26,25 +26,6 @@ jobs:
       - name: Run tests
         run: python -m pytest
 
-      - name: Update notebook after repository cleanup
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-
-          path = Path("notebooks/absolute_deviation_full_workflow.ipynb")
-          notebook = json.loads(path.read_text())
-          old = "metrics_df, coefficients_df = run_original_data()"
-          new = "metrics_df = run_original_data()"
-
-          for cell in notebook.get("cells", []):
-              source = cell.get("source")
-              if isinstance(source, list):
-                  cell["source"] = [line.replace(old, new) for line in source]
-
-          path.write_text(json.dumps(notebook, indent=1) + "\n")
-          PY
-
       - name: Execute complete notebook
         run: |
           python -m nbconvert --to notebook --execute --inplace notebooks/absolute_deviation_full_workflow.ipynb \
