@@ -18,21 +18,11 @@ def _ensure_dirs() -> None:
     FIGURE_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def _coefficient_rows(dataset: str, result, names: list[str]) -> list[dict]:
-    rows = [{"dataset": dataset, "model": result.model, "term": "Intercept", "estimate": result.intercept}]
-    rows.extend(
-        {"dataset": dataset, "model": result.model, "term": name, "estimate": float(value)}
-        for name, value in zip(names, result.coefficients)
-    )
-    return rows
-
-
-def run_original_data() -> tuple[pd.DataFrame, pd.DataFrame]:
+def run_original_data() -> pd.DataFrame:
     _ensure_dirs()
     metric_rows: list[dict] = []
-    coef_rows: list[dict] = []
     for name in DATASETS:
-        X, y, columns = load_dataset(name)
+        X, y, _ = load_dataset(name)
         for fitter in (fit_ols, fit_lad):
             result = fitter(X, y)
             if not result.success:
@@ -45,12 +35,9 @@ def run_original_data() -> tuple[pd.DataFrame, pd.DataFrame]:
                     **metrics,
                 }
             )
-            coef_rows.extend(_coefficient_rows(name, result, columns))
     metrics_df = pd.DataFrame(metric_rows)
-    coefs_df = pd.DataFrame(coef_rows)
     metrics_df.to_csv(RESULT_DIR / "original_data_metrics.csv", index=False)
-    coefs_df.to_csv(RESULT_DIR / "original_data_coefficients.csv", index=False)
-    return metrics_df, coefs_df
+    return metrics_df
 
 
 def run_error_distribution_experiment(

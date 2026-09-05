@@ -1,4 +1,4 @@
-"""Literature-aligned OLS and least-absolute-deviation regression."""
+"""OLS and least-absolute-deviation regression."""
 
 from .models import RegressionResult, fit_lad, fit_ols, regression_metrics
 

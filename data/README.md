@@ -8,4 +8,4 @@ The active empirical analysis uses three processed datasets.
 | `concrete_strength.csv` | Concrete Compressive Strength |
 | `hbk.csv` | Hawkins-Bradu-Kass |
 
-Source files are kept under `raw/`. The synthetic CSV previously used in the project is excluded from the active experiment.
+Source files are kept under `raw/`.

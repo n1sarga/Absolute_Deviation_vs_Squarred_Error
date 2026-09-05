@@ -10,9 +10,6 @@ from .experiments import FIGURE_DIR
 from .models import fit_lad, fit_ols
 
 
-KEY_FIGURES = ("hbk_multivariate_inlier_outlier.png",)
-
-
 def _save(fig, name: str) -> None:
     FIGURE_DIR.mkdir(parents=True, exist_ok=True)
     fig.tight_layout()

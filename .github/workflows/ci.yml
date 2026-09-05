@@ -26,7 +26,7 @@ jobs:
       - name: Run tests
         run: python -m pytest
 
-      - name: Update notebook distribution summary
+      - name: Update notebook after repository cleanup
         run: |
           python - <<'PY'
           import json
@@ -34,8 +34,8 @@ jobs:
 
           path = Path("notebooks/absolute_deviation_full_workflow.ipynb")
           notebook = json.loads(path.read_text())
-          old = "[['SSE', 'SAE', 'coefficient_error_l2']]"
-          new = "[['SSE', 'SAE']]"
+          old = "metrics_df, coefficients_df = run_original_data()"
+          new = "metrics_df = run_original_data()"
 
           for cell in notebook.get("cells", []):
               source = cell.get("source")

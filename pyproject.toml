@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "absolute-deviation-regression"
 version = "0.2.0"
-description = "Literature-aligned comparison of ordinary least squares and least absolute deviations regression"
+description = "Comparison of ordinary least squares and least absolute deviations regression"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -14,9 +14,6 @@ dependencies = [
     "pandas>=2.0",
     "scipy>=1.9",
 ]
-
-[project.scripts]
-generate-all-results = "absolute_deviation.experiments:generate_all_results"
 
 [tool.setuptools.packages.find]
 where = ["src"]
