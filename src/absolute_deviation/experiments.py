@@ -62,7 +62,7 @@ def run_error_distribution_experiment(
     rng = np.random.default_rng(seed)
     beta_true = np.array([5.0, 1.0, 2.0, 3.0])
     rows: list[dict] = []
-    distributions = ("normal", "laplace", "cauchy", "contaminated_normal")
+    distributions = ("normal", "laplace", "cauchy")
     for rep in range(repetitions):
         X = rng.normal(size=(n, 3))
         A = np.column_stack([np.ones(n), X])
@@ -71,23 +71,17 @@ def run_error_distribution_experiment(
                 errors = rng.normal(size=n)
             elif distribution == "laplace":
                 errors = rng.laplace(scale=1 / np.sqrt(2), size=n)
-            elif distribution == "cauchy":
-                errors = rng.standard_cauchy(size=n)
             else:
-                errors = rng.normal(size=n)
-                mask = rng.random(n) < 0.10
-                errors[mask] += rng.normal(scale=10.0, size=mask.sum())
+                errors = rng.standard_cauchy(size=n)
             y = A @ beta_true + errors
             for fitter in (fit_ols, fit_lad):
                 result = fitter(X, y)
-                beta_hat = np.concatenate([[result.intercept], result.coefficients])
                 metrics = regression_metrics(y, result.fitted)
                 rows.append(
                     {
                         "repetition": rep,
                         "distribution": distribution,
                         "model": result.model,
-                        "coefficient_error_l2": float(np.linalg.norm(beta_hat - beta_true)),
                         **metrics,
                     }
                 )
