@@ -1,6 +1,6 @@
 # Regression by Minimizing Absolute Deviation
 
-This project compares Ordinary Least Squares (OLS) and Least Absolute Deviations (LAD) regression using three empirical datasets: Boston Housing, Concrete Compressive Strength, and Hawkins-Bradu-Kass (HBK). The methodology is restricted to six core LAD papers by Wagner (1959), Barrodale & Roberts (1973), Bassett & Koenker (1978), Bloomfield & Steiger (1980), Narula & Wellington (1982), and Pollard (1991).
+This project compares Ordinary Least Squares (OLS) and Least Absolute Deviations (LAD) regression using three empirical datasets: Boston Housing, Concrete Compressive Strength, and Hawkins-Bradu-Kass (HBK).
 
 The complete executed workflow is available in [`notebooks/absolute_deviation_full_workflow.ipynb`](notebooks/absolute_deviation_full_workflow.ipynb).
 
@@ -54,7 +54,7 @@ Boston Housing has no supplied outlier labels, so the figure is a descriptive re
 
 ### Concrete Compressive Strength
 
-Concrete Strength is visualized in the same multivariate residual space without introducing an external outlier-detection method.
+Concrete Strength is visualized in the same multivariate residual space.
 
 ![Concrete Strength multivariate residual visualization](outputs/figures/concrete_strength_multivariate_residuals.png)
 
@@ -66,4 +66,4 @@ python scripts/generate_all_results.py
 python -m pytest
 ```
 
-Generated results are stored in `outputs/results/` and figures in `outputs/figures/`. Method details are available in `docs/`.
+Generated results are stored in `outputs/results/` and figures in `outputs/figures/`.
