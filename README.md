@@ -2,6 +2,8 @@
 
 This project compares Ordinary Least Squares (OLS) and Least Absolute Deviations (LAD) regression using three empirical datasets: Boston Housing, Concrete Compressive Strength, and Hawkins-Bradu-Kass (HBK). The methodology is restricted to six core LAD papers by Wagner (1959), Barrodale & Roberts (1973), Bassett & Koenker (1978), Bloomfield & Steiger (1980), Narula & Wellington (1982), and Pollard (1991).
 
+The complete executed workflow is available in [`notebooks/absolute_deviation_full_workflow.ipynb`](notebooks/absolute_deviation_full_workflow.ipynb).
+
 ## Objective
 
 > How does regression obtained by minimizing absolute deviations differ from regression obtained by minimizing squared deviations, particularly when observations contain large or extreme errors?
