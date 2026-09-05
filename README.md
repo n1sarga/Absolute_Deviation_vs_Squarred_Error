@@ -8,27 +8,31 @@ The complete executed workflow is available in [`absolute_deviation_full_workflo
 
 1. Load and prepare the three empirical datasets. [`data.py`](src/absolute_deviation/data.py)
 2. Fit OLS and LAD models using the same observations and predictors. [`models.py`](src/absolute_deviation/models.py)
-3. Compare SSE and SAE. [`experiments.py`](src/absolute_deviation/experiments.py)
-4. Visualize fitted values and multivariate residual behavior. [`plotting.py`](src/absolute_deviation/plotting.py)
-5. Run the controlled large-response-error experiment. [`experiments.py`](src/absolute_deviation/experiments.py)
-6. Compare OLS and LAD under Normal, Laplace, Cauchy, and contaminated-normal errors. [`experiments.py`](src/absolute_deviation/experiments.py)
-7. Benchmark runtime across sample sizes and predictor counts. [`experiments.py`](src/absolute_deviation/experiments.py)
-8. Validate the OLS and LAD implementations. [`experiments.py`](src/absolute_deviation/experiments.py)
-9. Generate all result tables and figures. [`generate_all_results.py`](scripts/generate_all_results.py)
+3. Compare SSE and SAE on the empirical datasets. [`experiments.py`](src/absolute_deviation/experiments.py)
+4. Run the controlled large-response-error experiment. [`experiments.py`](src/absolute_deviation/experiments.py)
+5. Compare OLS and LAD under Normal, Laplace, Cauchy, and contaminated-normal errors. [`experiments.py`](src/absolute_deviation/experiments.py)
+6. Benchmark runtime across sample sizes and predictor counts. [`experiments.py`](src/absolute_deviation/experiments.py)
+7. Validate the OLS and LAD implementations. [`experiments.py`](src/absolute_deviation/experiments.py)
+8. Generate the four focused visualizations used for the main comparison. [`plotting.py`](src/absolute_deviation/plotting.py)
+9. Save result tables and execute the complete notebook.
 
-## Empirical visualizations
+## Key visualizations
 
-### Hawkins-Bradu-Kass (HBK)
+### OLS vs LAD with large response errors
 
-![HBK multivariate inlier/outlier visualization](outputs/figures/hbk_multivariate_inlier_outlier.png)
+![OLS and LAD with contaminated responses](outputs/figures/ols_lad_contaminated_fit.png)
 
-### Boston Housing
+### SSE vs contamination
 
-![Boston Housing multivariate residual visualization](outputs/figures/boston_housing_multivariate_residuals.png)
+![SSE versus contamination](outputs/figures/sse_vs_contamination.png)
 
-### Concrete Compressive Strength
+### SAE vs contamination
 
-![Concrete Strength multivariate residual visualization](outputs/figures/concrete_strength_multivariate_residuals.png)
+![SAE versus contamination](outputs/figures/sae_vs_contamination.png)
+
+### Hawkins-Bradu-Kass (HBK) multivariate residual comparison
+
+![HBK multivariate residual comparison](outputs/figures/hbk_multivariate_inlier_outlier.png)
 
 ## Run
 
@@ -38,4 +42,4 @@ python scripts/generate_all_results.py
 python -m pytest
 ```
 
-Generated results are stored in `outputs/results/` and figures in `outputs/figures/`.
+Generated result tables are stored in `outputs/results/`. The four retained figures are stored in `outputs/figures/`.
