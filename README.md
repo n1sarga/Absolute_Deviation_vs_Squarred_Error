@@ -1,94 +1,105 @@
 # Regression by Minimizing Absolute Deviation
 
-Reproducible research code and datasets for studying robust regression and
-multivariate outliers in Boston Housing, Concrete Strength, Hawkins-Bradu-Kass
-(HBK), and a synthetic OLS/LAD dataset.
+This repository is a literature-aligned computational study of ordinary least squares (OLS) and least absolute deviations (LAD) regression. The project is intentionally restricted to methods and ideas supported by the supplied LAD literature.
 
-The current workflow robust-scales each dataset, estimates its multivariate
-center and covariance with Minimum Covariance Determinant (MCD), and flags rows
-whose robust Mahalanobis distance exceeds the 97.5% chi-square cutoff. PCA is
-used only to visualize the distributions.
+## Project objective
 
-## Joint data-distribution outliers
+The central research question is:
 
-![Merged robust multivariate outlier distributions for all four datasets](outputs/figures/merged_outlier_distributions.png)
+> How does regression obtained by minimizing absolute deviations differ from regression obtained by minimizing squared deviations, particularly when observations contain large or extreme errors?
 
-*Figure 1. Robust-scaled PCA distributions for the four datasets. Blue points
-are inliers; red points are observations flagged as multivariate outliers.*
+The project studies four connected themes: the mathematical difference between squared and absolute loss, the linear-programming formulation of LAD, the response of OLS and LAD to large vertical errors and long-tailed error distributions, and the computational cost of LAD relative to OLS.
 
-## Regression outlier classification
+## Literature basis
 
-![Merged leverage and response outlier classifications](outputs/figures/merged_outlier_classifications.png)
+The methodology is based on the following supplied papers:
 
-*Figure 2. Predictor-space leverage versus conditional response deviation.
-Blue = regular, yellow = leverage only, red = response only, and purple = both.*
+1. Wagner, H. M. (1959), *Linear Programming Techniques for Regression Analysis*.
+2. Barrodale, I. and Roberts, F. D. K. (1973), *An Improved Algorithm for Discrete l1 Linear Approximation*.
+3. Bassett, G. and Koenker, R. (1978), *Asymptotic Theory of Least Absolute Error Regression*.
+4. Bloomfield, P. and Steiger, W. (1980), *Least Absolute Deviations Curve-Fitting*.
+5. Narula, S. C. and Wellington, J. F. (1982), *The Minimum Sum of Absolute Errors Regression: A State of the Art Survey*.
+6. Amemiya, T. (1982), *Two Stage Least Absolute Deviations Estimators*.
+7. Powell, J. L. (1984), *Least Absolute Deviations Estimation for the Censored Regression Model*.
+8. Pollard, D. (1991), *Asymptotics for Least Absolute Deviation Regression Estimators*.
 
-## LP-based LAD solver
+Wagner and Barrodale-Roberts provide the linear-programming and computational foundations. Bassett-Koenker, Narula-Wellington, Bloomfield-Steiger and Pollard provide the statistical and robustness motivation. Amemiya and Powell are treated as extensions showing broader LAD applicability; this repository does not implement 2SLAD or censored LAD.
 
-![LP-based LAD predictions compared with reference median regression](outputs/figures/lad_solver_validation.png)
+## OLS objective
 
-*Figure 3. Custom sparse linear-programming LAD predictions versus unpenalized
-median-regression reference predictions. All four objectives agree within
-floating-point error.*
-
-## Full-data OLS and LAD baselines
-
-![Full-data OLS and LAD baseline fits for all four datasets](outputs/figures/merged_baseline_ols_lad_fits.png)
-
-*Figure 4. Actual responses versus full-data OLS and LAD predictions. OLS
-minimizes squared error; LAD minimizes absolute error. These in-sample fits are
-descriptive baselines, not estimates of performance on unseen data.*
-
-## Sample-condition and contamination experiments
-
-![OLS and LAD sensitivity to observed and artificial outliers](outputs/figures/merged_condition_contamination_comparison.png)
-
-*Figure 5. Clean-reference MAE after contaminating 0%, 5%, 10%, or 20% of
-regular-row responses. Solid lines are means across 30 repetitions with
-one-standard-deviation error bars. Dotted lines show complete-data fits on the
-same regular rows.*
-
-## Formal model comparison
-
-![Formal OLS versus LAD comparison](outputs/figures/model_comparison_dashboard.png)
-
-*Figure 6. LAD reductions in clean-reference error, prediction drift, and
-standardized slope shift at 20% response contamination, plus measured runtime
-cost relative to OLS. Positive reductions favor LAD.*
-
-## Final out-of-fold validation
-
-![Paired-bootstrap MAE differences for OLS and LAD](outputs/figures/bootstrap_mae_difference.png)
-
-*Figure 7. LAD-minus-OLS MAE from repeat-averaged out-of-fold predictions with
-paired-bootstrap 95% confidence intervals. Negative values favor LAD.*
-
-LAD had lower out-of-fold MAE point estimates for all datasets (1.0%–13.9%
-reduction). Only Boston's unadjusted bootstrap interval excluded zero; no
-dataset passed Holm-adjusted family-wise alpha 0.05. Main conclusion: LAD gives
-strong vertical-outlier stability, while universal out-of-sample superiority is
-not established. OLS remains faster and has lower out-of-fold RMSE.
-
-## Repository layout
+For observations `(x_i, y_i)`, OLS chooses coefficients `beta` to minimize
 
 ```text
-.
-|-- .github/workflows/       # Automated tests
-|-- data/
-|   |-- raw/                 # Original downloaded files
-|   `-- processed/           # Analysis-ready CSV files
-|-- docs/                    # Method documentation
-|-- outputs/
-|   |-- figures/             # Individual and merged diagrams
-|   `-- results/             # Row-level flags and summary CSV
-|-- scripts/                 # User-facing command-line scripts
-|-- src/outlier_analysis/    # Reusable Python package
-|-- tests/                   # Automated regression tests
-|-- pyproject.toml           # Package and test configuration
-`-- requirements*.txt        # Runtime and development setup
+sum_i (y_i - x_i^T beta)^2
 ```
 
-## Quick start
+Because residuals are squared, large errors receive disproportionately large weight.
+
+## LAD objective
+
+LAD chooses coefficients `beta` to minimize
+
+```text
+sum_i |y_i - x_i^T beta|
+```
+
+This is the L1 / minimum-sum-of-absolute-errors criterion used throughout the supplied literature.
+
+## Linear-programming formulation
+
+The LAD residual is decomposed into non-negative positive and negative parts:
+
+```text
+y_i - x_i^T beta = e_i^+ - e_i^-
+e_i^+ >= 0
+e_i^- >= 0
+```
+
+and the optimization problem is
+
+```text
+minimize sum_i (e_i^+ + e_i^-)
+```
+
+The custom solver in `src/absolute_deviation/models.py` implements this formulation with `scipy.optimize.linprog`. It is a modern numerical solution of the literature-supported LP formulation; it is not claimed to reproduce the specialized Barrodale-Roberts algorithm.
+
+## Datasets
+
+The repository retains four experimental datasets:
+
+- Boston Housing
+- Concrete Compressive Strength
+- Hawkins-Bradu-Kass (HBK)
+- Synthetic OLS/LAD data
+
+The analytical methods applied to these datasets are restricted to the supplied literature. No MCD, robust Mahalanobis distance, PCA outlier screening, bootstrap inference, Holm correction, repeated cross-validation, or external outlier-classification framework is used in the rebuilt workflow.
+
+## Experiments
+
+### 1. Original-data OLS/LAD comparison
+
+Each dataset is fitted with OLS and LAD using the same rows and predictors. The repository reports coefficients, sum of squared errors (SSE), sum of absolute errors (SAE), MAE, RMSE and runtime.
+
+### 2. Large-response-error experiment
+
+A controlled synthetic experiment introduces deliberately large errors into selected response values. OLS and LAD are refitted and compared using coefficient change, prediction change, MAE and RMSE relative to the uncontaminated response. The selected contamination percentages are project-level experimental settings; they are not presented as values prescribed by the papers.
+
+### 3. Error-distribution experiment
+
+OLS and LAD are compared under error distributions explicitly motivated by the supplied literature:
+
+- Normal
+- Laplace / double exponential
+- Cauchy / long-tailed
+- contaminated normal
+
+The experiment reports coefficient estimation error and both squared- and absolute-error criteria without adding external inferential machinery.
+
+### 4. Computational comparison
+
+Simple timing experiments compare OLS with the custom LP-based LAD solver over several sample sizes and predictor counts. Runtime results are implementation- and hardware-specific and are not used to claim reproduction of historical CPU-time results.
+
+## Reproduce the study
 
 Python 3.10 or newer is required.
 
@@ -96,49 +107,67 @@ Python 3.10 or newer is required.
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-python scripts/analyze_outliers.py
-python scripts/validate_lad.py
-python scripts/fit_baseline_models.py
-python scripts/run_robustness_experiments.py
-python scripts/evaluate_models.py
-python scripts/run_final_analysis.py
+python scripts/generate_all_results.py
 ```
 
-After installation, this equivalent command is also available:
-
-```powershell
-analyze-outliers
-validate-lad
-fit-baseline-models
-run-robustness-experiments
-evaluate-models
-run-final-analysis
-```
-
-## Test
+Run the tests with:
 
 ```powershell
 python -m pip install -r requirements-dev.txt
 python -m pytest
 ```
 
-## Outputs
+## Generated outputs
 
-- `outputs/figures/`: one diagram per dataset and one merged diagram;
-- `outputs/results/`: joint outlier results plus regression-specific leverage and
-  response classifications, LAD validation results, and full-data OLS/LAD
-  metrics, coefficients, predictions, and contamination sensitivity results.
+The rebuilt workflow creates:
 
-Blue points are inliers. Red points are robust-distance outliers. A flag means
-that a row is unusual relative to the central multivariate pattern; it does not
-automatically mean the observation is erroneous.
+```text
+outputs/results/original_data_metrics.csv
+outputs/results/original_data_coefficients.csv
+outputs/results/contamination_metrics.csv
+outputs/results/contamination_coefficient_changes.csv
+outputs/results/distribution_experiment.csv
+outputs/results/runtime_results.csv
+outputs/results/lad_solver_validation.csv
+```
 
-See [outlier method notes](docs/outlier_method.md) and
-[LAD solver notes](docs/lad_solver.md) for calculation details. The
-[baseline model notes](docs/baseline_models.md) describe the full-data OLS/LAD
-comparison. The [robustness experiment notes](docs/robustness_experiments.md)
-define the full-data, inlier-only, and controlled-contamination protocol. See
-[formal comparison notes](docs/formal_comparison.md) for paired effects and
-runtime definitions. [Final validation notes](docs/final_validation.md) define
-cross-validation, bootstrap intervals, multiplicity correction, and limits.
-[Final research report](docs/final_research_report.md) provides full synthesis.
+and literature-aligned figures in `outputs/figures/`.
+
+## Repository structure
+
+```text
+.
+|-- data/
+|   `-- processed/
+|-- docs/
+|-- outputs/
+|   |-- figures/
+|   `-- results/
+|-- scripts/
+|   `-- generate_all_results.py
+|-- src/
+|   `-- absolute_deviation/
+|       |-- data.py
+|       |-- experiments.py
+|       |-- models.py
+|       `-- plotting.py
+|-- tests/
+|-- pyproject.toml
+|-- requirements.txt
+`-- requirements-dev.txt
+```
+
+## Interpretation
+
+The project does not assume LAD is universally superior. OLS directly optimizes squared error and remains attractive when the squared-error criterion, approximately Gaussian light-tailed errors, and computational simplicity are central. LAD directly optimizes absolute error and is particularly relevant when large vertical response errors or long-tailed distributions make squared-error fitting unstable.
+
+## Limitations
+
+- The project studies standard linear LAD only.
+- 2SLAD and censored LAD are literature extensions, not implemented models.
+- LAD is not claimed to be immune to all forms of unusual observations, especially extreme predictor configurations.
+- The contamination experiment is illustrative and depends on its selected magnitude and proportions.
+- Runtime depends on hardware, solver and data dimensions.
+- The absolute-value objective is non-differentiable, which is one reason the literature emphasizes specialized computational approaches.
+
+See `docs/literature_mapping.md`, `docs/theoretical_background.md`, `docs/experimental_design.md`, and `docs/literature_compliance_audit.md` for the full methodological mapping.
