@@ -37,3 +37,6 @@ jobs:
 
       - name: Run robustness experiments
         run: python scripts/run_robustness_experiments.py
+
+      - name: Evaluate OLS and LAD
+        run: python scripts/evaluate_models.py

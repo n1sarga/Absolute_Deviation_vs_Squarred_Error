@@ -7,6 +7,7 @@ python scripts/analyze_outliers.py
 python scripts/validate_lad.py
 python scripts/fit_baseline_models.py
 python scripts/run_robustness_experiments.py
+python scripts/evaluate_models.py
 ```
 
 - `figures/` contains individual and merged diagrams for joint distributions
@@ -14,4 +15,5 @@ python scripts/run_robustness_experiments.py
 - `results/` contains row-level joint distances, leverage/response classes, and
   combined summary tables. It also contains LP-versus-reference LAD validation
   results plus full-data OLS/LAD metrics, coefficients, predictions, residuals,
-  objective checks, and controlled-contamination sensitivity results.
+  objective checks, controlled-contamination sensitivity results, paired model
+  effects, and runtime benchmarks.

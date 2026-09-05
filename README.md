@@ -48,6 +48,14 @@ regular-row responses. Solid lines are means across 30 repetitions with
 one-standard-deviation error bars. Dotted lines show complete-data fits on the
 same regular rows.*
 
+## Formal model comparison
+
+![Formal OLS versus LAD comparison](outputs/figures/model_comparison_dashboard.png)
+
+*Figure 6. LAD reductions in clean-reference error, prediction drift, and
+standardized slope shift at 20% response contamination, plus measured runtime
+cost relative to OLS. Positive reductions favor LAD.*
+
 ## Repository layout
 
 ```text
@@ -79,6 +87,7 @@ python scripts/analyze_outliers.py
 python scripts/validate_lad.py
 python scripts/fit_baseline_models.py
 python scripts/run_robustness_experiments.py
+python scripts/evaluate_models.py
 ```
 
 After installation, this equivalent command is also available:
@@ -88,6 +97,7 @@ analyze-outliers
 validate-lad
 fit-baseline-models
 run-robustness-experiments
+evaluate-models
 ```
 
 ## Test
@@ -112,4 +122,6 @@ See [outlier method notes](docs/outlier_method.md) and
 [LAD solver notes](docs/lad_solver.md) for calculation details. The
 [baseline model notes](docs/baseline_models.md) describe the full-data OLS/LAD
 comparison. The [robustness experiment notes](docs/robustness_experiments.md)
-define the full-data, inlier-only, and controlled-contamination protocol.
+define the full-data, inlier-only, and controlled-contamination protocol. See
+[formal comparison notes](docs/formal_comparison.md) for paired effects and
+runtime definitions.
