@@ -6,16 +6,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from .experiments import FIGURE_DIR, RESULT_DIR
+from .experiments import FIGURE_DIR
 from .models import fit_lad, fit_ols
 
 
-KEY_FIGURES = (
-    "ols_lad_contaminated_fit.png",
-    "sse_vs_contamination.png",
-    "sae_vs_contamination.png",
-    "hbk_multivariate_inlier_outlier.png",
-)
+KEY_FIGURES = ("hbk_multivariate_inlier_outlier.png",)
 
 
 def _save(fig, name: str) -> None:
@@ -29,65 +24,6 @@ def _clear_old_figures() -> None:
     FIGURE_DIR.mkdir(parents=True, exist_ok=True)
     for path in FIGURE_DIR.glob("*.png"):
         path.unlink()
-
-
-def plot_contaminated_fit(seed: int = 1959) -> None:
-    rng = np.random.default_rng(seed)
-    x = np.linspace(-3, 3, 80)
-    y = 3.0 + 2.0 * x + rng.normal(scale=0.7, size=x.size)
-    y[-4:] += np.array([15.0, 18.0, 21.0, 24.0])
-    X = x.reshape(-1, 1)
-
-    ols = fit_ols(X, y)
-    lad = fit_lad(X, y)
-    order = np.argsort(x)
-
-    fig, ax = plt.subplots(figsize=(7, 5))
-    ax.scatter(x, y, s=24, alpha=0.75, label="Observations")
-    ax.plot(x[order], ols.fitted[order], linewidth=2, label="OLS")
-    ax.plot(x[order], lad.fitted[order], linewidth=2, label="LAD")
-    ax.set_xlabel("Predictor x")
-    ax.set_ylabel("Response y")
-    ax.set_title("OLS and LAD with large response errors")
-    ax.legend()
-    _save(fig, "ols_lad_contaminated_fit.png")
-
-
-def plot_contamination_objectives() -> None:
-    metrics = pd.read_csv(RESULT_DIR / "contamination_metrics.csv")
-
-    for value, ylabel, filename, title in (
-        (
-            "SSE",
-            "Mean SSE against clean responses",
-            "sse_vs_contamination.png",
-            "Squared error as contamination increases",
-        ),
-        (
-            "SAE",
-            "Mean SAE against clean responses",
-            "sae_vs_contamination.png",
-            "Absolute error as contamination increases",
-        ),
-    ):
-        summary = metrics.groupby(
-            ["contamination_fraction", "model"], as_index=False
-        )[value].mean()
-
-        fig, ax = plt.subplots(figsize=(7, 5))
-        for model, part in summary.groupby("model"):
-            ax.plot(
-                part["contamination_fraction"] * 100,
-                part[value],
-                marker="o",
-                linewidth=2,
-                label=model,
-            )
-        ax.set_xlabel("Contaminated responses (%)")
-        ax.set_ylabel(ylabel)
-        ax.set_title(title)
-        ax.legend()
-        _save(fig, filename)
 
 
 def plot_hbk_multivariate_inlier_outlier() -> None:
@@ -158,8 +94,6 @@ def plot_hbk_multivariate_inlier_outlier() -> None:
 
 def generate_all_figures() -> None:
     _clear_old_figures()
-    plot_contaminated_fit()
-    plot_contamination_objectives()
     plot_hbk_multivariate_inlier_outlier()
 
 

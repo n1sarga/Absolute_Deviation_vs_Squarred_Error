@@ -53,66 +53,6 @@ def run_original_data() -> tuple[pd.DataFrame, pd.DataFrame]:
     return metrics_df, coefs_df
 
 
-def _controlled_design(seed: int = 1959, n: int = 200, p: int = 3):
-    rng = np.random.default_rng(seed)
-    X = rng.normal(size=(n, p))
-    beta = np.arange(1, p + 1, dtype=float)
-    y = 5.0 + X @ beta + rng.normal(scale=1.0, size=n)
-    return X, y, beta
-
-
-def run_contamination_experiment(
-    contamination_levels: tuple[float, ...] = (0.0, 0.05, 0.10, 0.20),
-    repetitions: int = 30,
-    seed: int = 1982,
-) -> tuple[pd.DataFrame, pd.DataFrame]:
-    _ensure_dirs()
-    X, y_clean, _ = _controlled_design(seed=seed)
-    base_ols = fit_ols(X, y_clean)
-    base_lad = fit_lad(X, y_clean)
-    base = {"OLS": base_ols, "LAD": base_lad}
-    rng = np.random.default_rng(seed + 1)
-    metric_rows: list[dict] = []
-    shift_rows: list[dict] = []
-    n = len(y_clean)
-    for level in contamination_levels:
-        for rep in range(repetitions):
-            y = y_clean.copy()
-            m = int(round(level * n))
-            if m:
-                idx = rng.choice(n, size=m, replace=False)
-                scale = max(float(np.std(y_clean)), 1.0)
-                signs = rng.choice([-1.0, 1.0], size=m)
-                y[idx] += signs * 15.0 * scale
-            for fitter in (fit_ols, fit_lad):
-                result = fitter(X, y)
-                metrics = regression_metrics(y_clean, result.fitted)
-                beta_result = np.concatenate([[result.intercept], result.coefficients])
-                beta_base = np.concatenate([[base[result.model].intercept], base[result.model].coefficients])
-                coefficient_shift = float(np.linalg.norm(beta_result - beta_base))
-                metric_rows.append(
-                    {
-                        "contamination_fraction": level,
-                        "repetition": rep,
-                        "model": result.model,
-                        **metrics,
-                    }
-                )
-                shift_rows.append(
-                    {
-                        "contamination_fraction": level,
-                        "repetition": rep,
-                        "model": result.model,
-                        "coefficient_shift_l2": coefficient_shift,
-                    }
-                )
-    metrics_df = pd.DataFrame(metric_rows)
-    shifts_df = pd.DataFrame(shift_rows)
-    metrics_df.to_csv(RESULT_DIR / "contamination_metrics.csv", index=False)
-    shifts_df.to_csv(RESULT_DIR / "contamination_coefficient_changes.csv", index=False)
-    return metrics_df, shifts_df
-
-
 def run_error_distribution_experiment(
     repetitions: int = 100,
     n: int = 150,
@@ -217,7 +157,6 @@ def validate_lad_solver() -> pd.DataFrame:
 
 def generate_all_results() -> None:
     run_original_data()
-    run_contamination_experiment()
     run_error_distribution_experiment()
     run_runtime_benchmark()
     validate_lad_solver()

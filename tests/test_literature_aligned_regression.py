@@ -2,7 +2,6 @@ import numpy as np
 
 from absolute_deviation.data import DATASETS
 from absolute_deviation.models import fit_lad, fit_ols, regression_metrics
-from absolute_deviation.experiments import run_contamination_experiment
 
 
 def test_only_three_empirical_datasets_are_active():
@@ -41,13 +40,3 @@ def test_lad_multiple_predictors():
     lad = fit_lad(X, y)
     assert lad.success
     assert np.allclose(lad.fitted, y, atol=1e-8)
-
-
-def test_contamination_experiment_is_deterministic(tmp_path, monkeypatch):
-    import absolute_deviation.experiments as exp
-    monkeypatch.setattr(exp, "RESULT_DIR", tmp_path / "results")
-    monkeypatch.setattr(exp, "FIGURE_DIR", tmp_path / "figures")
-    a, b = run_contamination_experiment(contamination_levels=(0.0, 0.1), repetitions=2, seed=77)
-    c, d = run_contamination_experiment(contamination_levels=(0.0, 0.1), repetitions=2, seed=77)
-    assert np.allclose(a.select_dtypes("number"), c.select_dtypes("number"), rtol=1e-10, atol=1e-10)
-    assert np.allclose(b.select_dtypes("number"), d.select_dtypes("number"), rtol=1e-10, atol=1e-10)
