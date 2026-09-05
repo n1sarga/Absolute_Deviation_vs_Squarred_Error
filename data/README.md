@@ -1,24 +1,20 @@
 # Data
 
-The analysis reads only from `processed/`. Files under `raw/` preserve available
-source downloads and should not be edited in place.
+The active literature-aligned analysis reads from `processed/`. Files under `raw/` preserve available source downloads and are not modified by the analysis.
 
 ## Processed datasets
 
 | File | Purpose |
 |---|---|
-| `boston_housing.csv` | Analysis-ready Boston Housing data |
-| `concrete_strength.csv` | Analysis-ready Concrete Strength data |
-| `hbk.csv` | Analysis-ready Hawkins-Bradu-Kass data |
-| `synthetic_ols_lad_outliers.csv` | Supplied synthetic regression data |
+| `boston_housing.csv` | Boston Housing regression data |
+| `concrete_strength.csv` | Concrete Compressive Strength regression data |
+| `hbk.csv` | Hawkins-Bradu-Kass regression data |
+| `synthetic_ols_lad_outliers.csv` | Synthetic multivariate OLS/LAD regression data |
 
-## Raw sources
+## Minimal preparation
 
-- `raw/concrete_strength/` contains the original spreadsheet, archive, and
-  dataset notes.
-- `raw/concrete_strength/original_copy/` preserves the additional identical
-  spreadsheet copy that existed before repository organization.
-- `raw/hbk/hbk.csv` preserves the downloaded HBK source file.
+The rebuilt project deliberately avoids a separate outlier-detection pipeline. Identifier or descriptive columns are excluded when they are not regression variables, missing rows are removed transparently, and numeric predictors are passed directly to OLS and LAD.
 
-Identifiers are not used as measurement variables. See
-[`docs/outlier_method.md`](../docs/outlier_method.md) for the exact columns used.
+Extreme observations are not automatically deleted because the project studies how squared-error and absolute-error regression respond to large errors.
+
+See [`docs/experimental_design.md`](../docs/experimental_design.md) and [`docs/literature_mapping.md`](../docs/literature_mapping.md) for the active methodology.
