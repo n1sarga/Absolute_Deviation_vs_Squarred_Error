@@ -22,6 +22,12 @@ This audit applies to the rebuilt active workflow on `main`.
 - Implementation: `scipy.optimize.linprog` with unrestricted regression coefficients and non-negative residual-part variables.
 - Deviation from paper: a modern LP solver is used rather than a historical simplex implementation. The LP itself follows the literature-supported formulation.
 
+### HBK multivariate case visualization
+- Supporting basis: the regression residual concepts come from the LAD/OLS literature, while the regular, bad-leverage, and good-leverage labels are already present as `CaseGroup` values in the HBK dataset.
+- Literature concept: compare squared-error and absolute-error regression on observations that include unusual/extreme cases.
+- Implementation: fit OLS and LAD using all three HBK predictors (`X1`, `X2`, `X3`) and plot each observation's absolute OLS residual against its absolute LAD residual. Cases 15-75 are displayed as regular/inlier cases, cases 1-10 as bad-leverage/outlier cases, and cases 11-14 as good-leverage cases.
+- Deviation from paper: no new outlier detector is introduced. The figure preserves the dataset-provided case labels instead of deriving labels through an external statistical procedure.
+
 ### Large-response-error experiment
 - Supporting literature: Narula & Wellington (1982); Bloomfield & Steiger (1980); Barrodale & Roberts (1973).
 - Literature concept: least squares can be strongly affected by extreme errors, while L1 fitting is less sensitive.
@@ -58,7 +64,7 @@ The rebuild excludes the following methods because they are not part of the supp
 - robust Mahalanobis distance
 - chi-square outlier thresholds
 - PCA outlier screening
-- external leverage/response-outlier classification
+- externally computed leverage/response-outlier classification
 - repeated cross-validation
 - bootstrap confidence intervals
 - paired bootstrap
@@ -66,6 +72,8 @@ The rebuild excludes the following methods because they are not part of the supp
 - Holm multiple-testing adjustment
 - modern alternative robust regressors
 
+The HBK `CaseGroup` field is not an externally computed classification in this repository; it is existing dataset metadata and is used only for visualization.
+
 ## Compliance conclusion
 
-The active workflow is limited to squared-loss regression, absolute-loss regression, the literature-supported linear-programming formulation of LAD, direct experiments with extreme response errors and literature-discussed error distributions, and computational comparisons. Any project-specific numerical settings are labeled as experiment settings rather than literature-derived prescriptions.
+The active workflow is limited to squared-loss regression, absolute-loss regression, the literature-supported linear-programming formulation of LAD, descriptive visualization of the existing HBK case groups, direct experiments with extreme response errors and literature-discussed error distributions, and computational comparisons. Any project-specific numerical settings are labeled as experiment settings rather than literature-derived prescriptions.
