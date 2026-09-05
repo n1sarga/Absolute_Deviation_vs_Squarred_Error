@@ -1,0 +1,3 @@
+example,ols_sse,lad_sse,ols_sae,lad_sae,ols_sse_is_minimum_against_lad,lad_sae_is_minimum_against_ols
+1,362.1428571428571,676.0,40.857142857142854,26.0,True,True
+2,9.860761315262648e-32,0.0,4.440892098500626e-16,0.0,True,True
