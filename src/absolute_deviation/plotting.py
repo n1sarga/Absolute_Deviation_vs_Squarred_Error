@@ -104,12 +104,61 @@ def plot_real_dataset_predictions() -> None:
         _save(fig, f"{name}_actual_vs_fitted.png")
 
 
+def plot_hbk_multivariate_inlier_outlier() -> None:
+    """Visualize the HBK case groups using residuals from the full multivariate fits.
+
+    The figure does not run a new outlier detector. It preserves the CaseGroup
+    labels already included with the HBK data: cases 1-10 are bad-leverage
+    observations, cases 11-14 are good-leverage observations, and cases 15-75
+    are regular observations. OLS and LAD both use X1, X2, and X3.
+    """
+    data_path = Path(__file__).resolve().parents[2] / "data" / "processed" / "hbk.csv"
+    df = pd.read_csv(data_path)
+    X = df[["X1", "X2", "X3"]].to_numpy(dtype=float)
+    y = df["Y"].to_numpy(dtype=float)
+    ols = fit_ols(X, y)
+    lad = fit_lad(X, y)
+    abs_ols = np.abs(ols.residuals)
+    abs_lad = np.abs(lad.residuals)
+    groups = df["CaseGroup"].astype(str).str.lower()
+
+    group_specs = (
+        ("Regular cases (inliers)", groups.str.contains("regular"), "o"),
+        ("Bad leverage cases (outliers)", groups.str.contains("bad leverage"), "X"),
+        ("Good leverage cases", groups.str.contains("good leverage"), "^"),
+    )
+
+    fig, ax = plt.subplots(figsize=(7.5, 6))
+    for label, mask, marker in group_specs:
+        ax.scatter(abs_ols[mask], abs_lad[mask], s=55, marker=marker, alpha=0.85, label=label)
+
+    upper = float(max(abs_ols.max(), abs_lad.max())) * 1.08
+    ax.plot([0, upper], [0, upper], linestyle="--", linewidth=1, label="Equal absolute residual")
+
+    non_regular = ~groups.str.contains("regular")
+    for observation, x_value, y_value in zip(
+        df.loc[non_regular, "Observation"],
+        abs_ols[non_regular],
+        abs_lad[non_regular],
+    ):
+        ax.annotate(str(int(observation)), (x_value, y_value), xytext=(4, 4), textcoords="offset points", fontsize=8)
+
+    ax.set_xlim(left=0)
+    ax.set_ylim(bottom=0)
+    ax.set_xlabel("Absolute OLS residual (X1, X2, X3 used together)")
+    ax.set_ylabel("Absolute LAD residual (X1, X2, X3 used together)")
+    ax.set_title("HBK multivariate inlier/outlier visualization")
+    ax.legend()
+    _save(fig, "hbk_multivariate_inlier_outlier.png")
+
+
 def generate_all_figures() -> None:
     plot_clean_and_contaminated_lines()
     plot_contamination_results()
     plot_distribution_results()
     plot_runtime_results()
     plot_real_dataset_predictions()
+    plot_hbk_multivariate_inlier_outlier()
 
 
 if __name__ == "__main__":
