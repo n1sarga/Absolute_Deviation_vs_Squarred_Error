@@ -7,6 +7,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "data" / "processed"
 
+# Only the three empirical datasets below are part of the active experiment.
 DATASETS = {
     "boston_housing": {
         "file": "boston_housing.csv",
@@ -24,12 +25,6 @@ DATASETS = {
         "file": "hbk.csv",
         "target": "Y",
         "drop": ["Observation", "CaseGroup"],
-        "skiprows": 0,
-    },
-    "synthetic": {
-        "file": "synthetic_ols_lad_outliers.csv",
-        "target": "y",
-        "drop": ["ID"],
         "skiprows": 0,
     },
 }

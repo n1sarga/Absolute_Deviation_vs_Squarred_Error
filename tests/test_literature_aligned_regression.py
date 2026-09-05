@@ -1,7 +1,12 @@
 import numpy as np
 
+from absolute_deviation.data import DATASETS
 from absolute_deviation.models import fit_lad, fit_ols, regression_metrics
 from absolute_deviation.experiments import run_contamination_experiment
+
+
+def test_only_three_empirical_datasets_are_active():
+    assert set(DATASETS) == {"boston_housing", "concrete_strength", "hbk"}
 
 
 def test_ols_minimizes_sse_against_lad():

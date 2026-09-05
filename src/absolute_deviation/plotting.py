@@ -26,8 +26,8 @@ def plot_clean_and_contaminated_lines(seed: int = 1959) -> None:
     y_bad[-4:] += np.array([15.0, 18.0, 21.0, 24.0])
     X = x.reshape(-1, 1)
     for y, suffix, title in (
-        (y_clean, "clean", "Clean synthetic data"),
-        (y_bad, "contaminated", "Synthetic data with large response errors"),
+        (y_clean, "clean", "Controlled clean regression example"),
+        (y_bad, "contaminated", "Controlled example with large response errors"),
     ):
         ols, lad = fit_ols(X, y), fit_lad(X, y)
         order = np.argsort(x)
@@ -89,7 +89,7 @@ def plot_runtime_results() -> None:
 
 
 def plot_real_dataset_predictions() -> None:
-    for name in ("boston_housing", "concrete_strength", "hbk", "synthetic"):
+    for name in ("boston_housing", "concrete_strength", "hbk"):
         X, y, _ = load_dataset(name)
         ols, lad = fit_ols(X, y), fit_lad(X, y)
         lo, hi = float(np.min(y)), float(np.max(y))

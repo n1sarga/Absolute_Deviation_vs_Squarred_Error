@@ -6,27 +6,23 @@ The experiments are restricted to questions directly motivated by the supplied l
 
 How does regression obtained by minimizing absolute deviations differ from regression obtained by minimizing squared deviations, particularly when observations contain large or extreme errors?
 
-## Experiment 1: original data
+## Experiment 1: original empirical data
 
-For Boston Housing, Concrete Strength, HBK, and the synthetic dataset, the same observations and predictors are fitted with OLS and LAD. The comparison reports coefficients, SSE, SAE, MAE, RMSE, and runtime.
+Only three empirical datasets are used: Boston Housing, Concrete Strength, and Hawkins-Bradu-Kass (HBK). The same observations and predictors are fitted with OLS and LAD. The comparison reports coefficients, SSE, SAE, MAE, RMSE, and runtime.
+
+The previously included synthetic OLS/LAD CSV dataset is excluded from this experiment.
 
 The purpose is descriptive: OLS should directly minimize SSE and LAD should directly minimize SAE on the fitted sample. The project does not infer universal out-of-sample superiority from these fits.
 
 ## Experiment 2: large vertical response errors
 
-A synthetic linear dataset is generated and fitted with OLS and LAD. Selected response values are then given deliberately large errors and both models are refitted. The experiment records:
+A controlled regression design is generated internally for this experiment rather than loaded as an empirical dataset. Selected response values are then given deliberately large errors and both OLS and LAD are refitted. The experiment records coefficient change, mean absolute change in fitted values, MAE and RMSE relative to the uncontaminated response, and fit runtime.
 
-- coefficient change relative to the uncontaminated fit;
-- mean absolute change in fitted values relative to the uncontaminated fit;
-- MAE against the uncontaminated response;
-- RMSE against the uncontaminated response;
-- fit runtime.
-
-The contamination levels 0%, 5%, 10%, and 20% and the chosen error magnitude are project-selected illustration settings. They are not represented as numerical prescriptions from the papers. Their purpose is only to operationalize the literature's stated concern with extreme errors and contaminated observations.
+The contamination levels 0%, 5%, 10%, and 20% and the chosen error magnitude are project-selected illustration settings. They are not represented as numerical prescriptions from the papers. Their purpose is to operationalize the literature's concern with extreme errors and contaminated observations.
 
 ## Experiment 3: error distributions
 
-The simulation compares Normal, Laplace, Cauchy, and contaminated-normal errors. These distributions are included because the supplied papers contrast the Gaussian setting with long-tailed/non-Gaussian cases and specifically discuss Laplace, Cauchy, and contaminated-normal situations.
+The controlled simulation compares Normal, Laplace, Cauchy, and contaminated-normal errors. These distributions are included because the supplied papers contrast the Gaussian setting with long-tailed/non-Gaussian cases and discuss Laplace, Cauchy, and contaminated-normal situations.
 
 The same true regression coefficients are used for OLS and LAD. Repeated samples are summarized using coefficient estimation error, SSE, SAE, MAE, and RMSE. Only simple descriptive summaries are used.
 

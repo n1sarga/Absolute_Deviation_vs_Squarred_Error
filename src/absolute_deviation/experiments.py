@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict
 from pathlib import Path
-from time import perf_counter
 
 import numpy as np
 import pandas as pd
@@ -30,7 +28,7 @@ def _coefficient_rows(dataset: str, result, names: list[str]) -> list[dict]:
 
 
 def run_original_data() -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Fit OLS and LAD to each full dataset and report both loss criteria."""
+    """Fit OLS and LAD to the three active empirical datasets."""
     _ensure_dirs()
     metric_rows: list[dict] = []
     coef_rows: list[dict] = []
@@ -57,7 +55,8 @@ def run_original_data() -> tuple[pd.DataFrame, pd.DataFrame]:
     return metrics_df, coefs_df
 
 
-def _synthetic_design(seed: int = 1959, n: int = 200, p: int = 3):
+def _controlled_design(seed: int = 1959, n: int = 200, p: int = 3):
+    """Generate an internal controlled regression design for robustness experiments."""
     rng = np.random.default_rng(seed)
     X = rng.normal(size=(n, p))
     beta = np.arange(1, p + 1, dtype=float)
@@ -72,11 +71,12 @@ def run_contamination_experiment(
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Illustrate sensitivity to deliberately introduced large vertical errors.
 
-    The exact contamination percentages and repetition count are project-selected
-    experimental settings; they are not claimed to come from the papers.
+    The controlled design is generated inside this experiment and is not one of
+    the project's empirical datasets. Exact contamination percentages and the
+    repetition count are project-selected settings, not claims about the papers.
     """
     _ensure_dirs()
-    X, y_clean, _ = _synthetic_design(seed=seed)
+    X, y_clean, _ = _controlled_design(seed=seed)
     base_ols = fit_ols(X, y_clean)
     base_lad = fit_lad(X, y_clean)
     base = {"OLS": base_ols, "LAD": base_lad}
@@ -130,7 +130,7 @@ def run_error_distribution_experiment(
     n: int = 150,
     seed: int = 1978,
 ) -> pd.DataFrame:
-    """Compare OLS and LAD under distributions discussed in the supplied literature."""
+    """Compare OLS and LAD under error distributions discussed in the literature."""
     _ensure_dirs()
     rng = np.random.default_rng(seed)
     beta_true = np.array([5.0, 1.0, 2.0, 3.0])
