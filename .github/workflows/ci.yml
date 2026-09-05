@@ -26,18 +26,21 @@ jobs:
       - name: Run tests
         run: python -m pytest
 
-      - name: Regenerate literature-aligned results
-        run: python scripts/generate_all_results.py
+      - name: Execute complete notebook
+        run: |
+          python -m nbconvert --to notebook --execute --inplace notebooks/absolute_deviation_full_workflow.ipynb \
+            --ExecutePreprocessor.timeout=900 \
+            --ExecutePreprocessor.kernel_name=python3
 
-      - name: Commit generated results and visualizations
+      - name: Commit generated notebook and outputs
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add outputs/
+          git add notebooks/ outputs/
           if git diff --cached --quiet; then
-            echo "No generated output changes to commit."
+            echo "No generated changes to commit."
           else
-            git commit -m "Add generated LAD visualizations and results [skip ci]"
+            git commit -m "Execute complete LAD notebook and refresh outputs [skip ci]"
             git push
           fi
