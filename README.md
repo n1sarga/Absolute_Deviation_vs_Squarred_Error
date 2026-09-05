@@ -6,28 +6,15 @@ The complete executed workflow is available in [`notebooks/absolute_deviation_fu
 
 ## Experimental workflow
 
-### Task 4 — Prepare the datasets
-
-The processed datasets are loaded from `data/processed/`. Rows with missing values are removed and only numeric predictors are used. Boston Housing uses `MEDV` as the target, skips the first metadata row, and excludes `B` from the predictors. Concrete Strength uses `Strength` as the target and all eight numeric predictors. HBK uses `Y` as the target and `X1`, `X2`, and `X3` as predictors; `Observation` and `CaseGroup` are not used as regression inputs. The same prepared observations and predictors are then supplied to both OLS and LAD.
-
-### Task 5 — Implement OLS
-
-OLS is fitted with an intercept using NumPy's `lstsq` solver. After estimating the coefficients, the implementation calculates fitted values, residuals, the sum of squared errors (SSE), and fitting time.
-
-### Task 6 — Implement LAD
-
-LAD is fitted with the same design matrix and intercept as OLS. The regression is solved as a linear-programming problem with SciPy's `linprog` using the HiGHS solver. The coefficient variables are unrestricted, while positive and negative residual components are constrained to be non-negative. The implementation returns the coefficients, fitted values, residuals, sum of absolute errors (SAE), and fitting time.
-
-### Remaining workflow
-
-7. Fit OLS and LAD on the three empirical datasets using the same observations and predictors.
-8. Compare SSE, SAE, MAE, RMSE, coefficients, and runtime.
-9. Visualize fitted values and multivariate residual behavior.
-10. Run the controlled large-response-error experiment.
-11. Compare OLS and LAD under Normal, Laplace, Cauchy, and contaminated-normal errors.
-12. Benchmark runtime across sample sizes and predictor counts.
-13. Validate the OLS and LAD implementations.
-14. Generate all result tables, figures, and the executed notebook.
+1. [Load and prepare the three empirical datasets.](src/absolute_deviation/data.py)
+2. [Fit OLS and LAD models using the same observations and predictors.](src/absolute_deviation/models.py)
+3. [Compare SSE, SAE, MAE, RMSE, coefficients, and runtime.](src/absolute_deviation/experiments.py)
+4. [Visualize fitted values and multivariate residual behavior.](src/absolute_deviation/plotting.py)
+5. [Run the controlled large-response-error experiment.](src/absolute_deviation/experiments.py)
+6. [Compare OLS and LAD under Normal, Laplace, Cauchy, and contaminated-normal errors.](src/absolute_deviation/experiments.py)
+7. [Benchmark runtime across sample sizes and predictor counts.](src/absolute_deviation/experiments.py)
+8. [Validate the OLS and LAD implementations.](src/absolute_deviation/experiments.py)
+9. [Generate all result tables and figures.](scripts/generate_all_results.py)
 
 ## Empirical visualizations
 
