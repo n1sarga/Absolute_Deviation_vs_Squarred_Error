@@ -30,8 +30,7 @@ def _as_2d(X: np.ndarray) -> np.ndarray:
 
 
 def _as_1d(y: np.ndarray) -> np.ndarray:
-    y = np.asarray(y, dtype=float).reshape(-1)
-    return y
+    return np.asarray(y, dtype=float).reshape(-1)
 
 
 def _design(X: np.ndarray, fit_intercept: bool) -> np.ndarray:
@@ -42,7 +41,6 @@ def _design(X: np.ndarray, fit_intercept: bool) -> np.ndarray:
 
 
 def fit_ols(X: np.ndarray, y: np.ndarray, fit_intercept: bool = True) -> RegressionResult:
-    """Ordinary least squares: minimize the sum of squared residuals."""
     X = _as_2d(X)
     y = _as_1d(y)
     if X.shape[0] != y.shape[0]:
@@ -67,11 +65,6 @@ def fit_ols(X: np.ndarray, y: np.ndarray, fit_intercept: bool = True) -> Regress
 
 
 def fit_lad(X: np.ndarray, y: np.ndarray, fit_intercept: bool = True) -> RegressionResult:
-    """Least absolute deviations via the Wagner-style linear-programming formulation.
-
-    Residuals are decomposed as y - X beta = e_plus - e_minus with
-    e_plus, e_minus >= 0, and the LP minimizes sum(e_plus + e_minus).
-    """
     X = _as_2d(X)
     y = _as_1d(y)
     if X.shape[0] != y.shape[0]:

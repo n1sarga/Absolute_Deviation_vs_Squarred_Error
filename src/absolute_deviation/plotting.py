@@ -108,13 +108,6 @@ def plot_real_dataset_predictions() -> None:
 
 
 def plot_hbk_multivariate_inlier_outlier() -> None:
-    """Visualize the HBK case groups using residuals from the full multivariate fits.
-
-    The figure does not run a new outlier detector. It preserves the CaseGroup
-    labels already included with the HBK data: cases 1-10 are bad-leverage
-    observations, cases 11-14 are good-leverage observations, and cases 15-75
-    are regular observations. OLS and LAD both use X1, X2, and X3.
-    """
     data_path = Path(__file__).resolve().parents[2] / "data" / "processed" / "hbk.csv"
     df = pd.read_csv(data_path)
     X = df[["X1", "X2", "X3"]].to_numpy(dtype=float)
@@ -156,13 +149,6 @@ def plot_hbk_multivariate_inlier_outlier() -> None:
 
 
 def plot_unlabeled_multivariate_residual_space(name: str, display_name: str) -> None:
-    """Visualize residual behavior when a dataset has no supplied outlier labels.
-
-    All available regression predictors are used simultaneously. The five points
-    with the largest displayed residual magnitude are highlighted only to make
-    the extreme end of the residual cloud easier to inspect. This is a
-    descriptive visualization choice, not a formal outlier-detection rule.
-    """
     X, y, _ = load_dataset(name)
     ols = fit_ols(X, y)
     lad = fit_lad(X, y)

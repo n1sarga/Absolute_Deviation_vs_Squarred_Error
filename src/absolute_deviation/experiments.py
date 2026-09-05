@@ -28,7 +28,6 @@ def _coefficient_rows(dataset: str, result, names: list[str]) -> list[dict]:
 
 
 def run_original_data() -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Fit OLS and LAD to the three active empirical datasets."""
     _ensure_dirs()
     metric_rows: list[dict] = []
     coef_rows: list[dict] = []
@@ -56,7 +55,6 @@ def run_original_data() -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def _controlled_design(seed: int = 1959, n: int = 200, p: int = 3):
-    """Generate an internal controlled regression design for robustness experiments."""
     rng = np.random.default_rng(seed)
     X = rng.normal(size=(n, p))
     beta = np.arange(1, p + 1, dtype=float)
@@ -69,12 +67,6 @@ def run_contamination_experiment(
     repetitions: int = 30,
     seed: int = 1982,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Illustrate sensitivity to deliberately introduced large vertical errors.
-
-    The controlled design is generated inside this experiment and is not one of
-    the project's empirical datasets. Exact contamination percentages and the
-    repetition count are project-selected settings, not claims about the papers.
-    """
     _ensure_dirs()
     X, y_clean, _ = _controlled_design(seed=seed)
     base_ols = fit_ols(X, y_clean)
@@ -130,7 +122,6 @@ def run_error_distribution_experiment(
     n: int = 150,
     seed: int = 1978,
 ) -> pd.DataFrame:
-    """Compare OLS and LAD under error distributions discussed in the literature."""
     _ensure_dirs()
     rng = np.random.default_rng(seed)
     beta_true = np.array([5.0, 1.0, 2.0, 3.0])
@@ -201,7 +192,6 @@ def run_runtime_benchmark(
 
 
 def validate_lad_solver() -> pd.DataFrame:
-    """Check the defining inequalities of OLS and LAD on deterministic examples."""
     _ensure_dirs()
     examples = [
         (np.arange(1.0, 8.0).reshape(-1, 1), np.array([2, 4, 6, 8, 10, 12, 40], dtype=float)),
