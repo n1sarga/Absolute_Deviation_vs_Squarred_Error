@@ -68,7 +68,10 @@ def plot_distribution_results() -> None:
     width = 0.36
     fig, ax = plt.subplots(figsize=(8, 5))
     for offset, model in ((-width / 2, "OLS"), (width / 2, "LAD")):
-        values = [float(summary[(summary.distribution == d) & (summary.model == model)]["coefficient_error_l2"].iloc[0]) for d in order]
+        values = [
+            float(summary[(summary.distribution == d) & (summary.model == model)]["coefficient_error_l2"].iloc[0])
+            for d in order
+        ]
         ax.bar(x + offset, values, width, label=model)
     ax.set_xticks(x, ["Normal", "Laplace", "Cauchy", "Contaminated normal"])
     ax.set_ylabel("Median coefficient estimation error")
@@ -152,6 +155,63 @@ def plot_hbk_multivariate_inlier_outlier() -> None:
     _save(fig, "hbk_multivariate_inlier_outlier.png")
 
 
+def plot_unlabeled_multivariate_residual_space(name: str, display_name: str) -> None:
+    """Visualize residual behavior when a dataset has no supplied outlier labels.
+
+    All available regression predictors are used simultaneously. The five points
+    with the largest displayed residual magnitude are highlighted only to make
+    the extreme end of the residual cloud easier to inspect. This is a
+    descriptive visualization choice, not a formal outlier-detection rule.
+    """
+    X, y, _ = load_dataset(name)
+    ols = fit_ols(X, y)
+    lad = fit_lad(X, y)
+    abs_ols = np.abs(ols.residuals)
+    abs_lad = np.abs(lad.residuals)
+
+    residual_extent = np.maximum(abs_ols, abs_lad)
+    n_highlight = min(5, len(y))
+    highlight_idx = np.argsort(residual_extent)[-n_highlight:]
+    highlight_mask = np.zeros(len(y), dtype=bool)
+    highlight_mask[highlight_idx] = True
+
+    fig, ax = plt.subplots(figsize=(7.5, 6))
+    ax.scatter(
+        abs_ols[~highlight_mask],
+        abs_lad[~highlight_mask],
+        s=34,
+        alpha=0.65,
+        label="Other observations",
+    )
+    ax.scatter(
+        abs_ols[highlight_mask],
+        abs_lad[highlight_mask],
+        s=70,
+        marker="X",
+        label="Largest residual observations (descriptive)",
+    )
+
+    upper = float(max(abs_ols.max(), abs_lad.max())) * 1.08
+    ax.plot([0, upper], [0, upper], linestyle="--", linewidth=1, label="Equal absolute residual")
+
+    for idx in highlight_idx:
+        ax.annotate(
+            str(int(idx + 1)),
+            (abs_ols[idx], abs_lad[idx]),
+            xytext=(4, 4),
+            textcoords="offset points",
+            fontsize=8,
+        )
+
+    ax.set_xlim(left=0)
+    ax.set_ylim(bottom=0)
+    ax.set_xlabel("Absolute OLS residual (all predictors used together)")
+    ax.set_ylabel("Absolute LAD residual (all predictors used together)")
+    ax.set_title(f"{display_name} multivariate residual visualization")
+    ax.legend()
+    _save(fig, f"{name}_multivariate_residuals.png")
+
+
 def generate_all_figures() -> None:
     plot_clean_and_contaminated_lines()
     plot_contamination_results()
@@ -159,6 +219,8 @@ def generate_all_figures() -> None:
     plot_runtime_results()
     plot_real_dataset_predictions()
     plot_hbk_multivariate_inlier_outlier()
+    plot_unlabeled_multivariate_residual_space("boston_housing", "Boston Housing")
+    plot_unlabeled_multivariate_residual_space("concrete_strength", "Concrete Strength")
 
 
 if __name__ == "__main__":
