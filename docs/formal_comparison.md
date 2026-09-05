@@ -4,7 +4,7 @@
 
 Stage 5 converts prior experiment outputs into direct paired comparisons. It
 measures error, prediction stability, coefficient stability, and fit-only
-runtime. Statistical inference and cross-validation remain Stage 6.
+runtime. Stage 6 adds statistical inference and cross-validation.
 
 ## Paired effects
 
@@ -76,4 +76,4 @@ python scripts/evaluate_models.py
 
 These are descriptive paired effects for fixed datasets and simulated
 contamination. They do not establish out-of-sample superiority or uncertainty.
-Stage 6 will use leakage-safe cross-validation and bootstrap intervals.
+Stage 6 results are reported in `docs/final_validation.md`.

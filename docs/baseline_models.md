@@ -53,4 +53,4 @@ Generated files:
 - `outputs/figures/merged_baseline_ols_lad_fits.png`.
 
 Controlled contamination is documented in `docs/robustness_experiments.md`.
-Cross-validation and inference remain later stages.
+Cross-validation and inference are documented in `docs/final_validation.md`.

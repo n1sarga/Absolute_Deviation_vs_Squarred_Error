@@ -40,3 +40,6 @@ jobs:
 
       - name: Evaluate OLS and LAD
         run: python scripts/evaluate_models.py
+
+      - name: Run final validation
+        run: python scripts/run_final_analysis.py

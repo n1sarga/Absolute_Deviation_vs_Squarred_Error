@@ -59,9 +59,9 @@ Blue, yellow, red, and purple represent these four classes respectively.
 - A flag means unusual, not necessarily erroneous.
 - MCD assumes an approximately ellipsoidal central predictor distribution.
   Skewed or multi-cluster data can produce many leverage flags.
-- Classification currently describes each complete dataset. Future predictive
-  experiments must refit every detector within each training fold to avoid
-  information leakage.
+- Classification describes each complete dataset. Final predictive validation
+  avoids leakage by not using these labels. Any future filtered CV experiment
+  must refit every detector within each training fold.
 - Boston variable `B` is excluded because it encodes an ethically problematic
   racial assumption.
 - Synthetic `ID` and HBK `Observation` are identifiers, not predictors.

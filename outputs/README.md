@@ -8,6 +8,7 @@ python scripts/validate_lad.py
 python scripts/fit_baseline_models.py
 python scripts/run_robustness_experiments.py
 python scripts/evaluate_models.py
+python scripts/run_final_analysis.py
 ```
 
 - `figures/` contains individual and merged diagrams for joint distributions
@@ -16,4 +17,4 @@ python scripts/evaluate_models.py
   combined summary tables. It also contains LP-versus-reference LAD validation
   results plus full-data OLS/LAD metrics, coefficients, predictions, residuals,
   objective checks, controlled-contamination sensitivity results, paired model
-  effects, and runtime benchmarks.
+  effects, runtime benchmarks, out-of-fold predictions, and bootstrap inference.

@@ -23,6 +23,7 @@ validate-lad = "outlier_analysis.lad_validation:main"
 fit-baseline-models = "outlier_analysis.baseline:main"
 run-robustness-experiments = "outlier_analysis.robustness:main"
 evaluate-models = "outlier_analysis.evaluation:main"
+run-final-analysis = "outlier_analysis.final_analysis:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -56,6 +56,19 @@ same regular rows.*
 standardized slope shift at 20% response contamination, plus measured runtime
 cost relative to OLS. Positive reductions favor LAD.*
 
+## Final out-of-fold validation
+
+![Paired-bootstrap MAE differences for OLS and LAD](outputs/figures/bootstrap_mae_difference.png)
+
+*Figure 7. LAD-minus-OLS MAE from repeat-averaged out-of-fold predictions with
+paired-bootstrap 95% confidence intervals. Negative values favor LAD.*
+
+LAD had lower out-of-fold MAE point estimates for all datasets (1.0%–13.9%
+reduction). Only Boston's unadjusted bootstrap interval excluded zero; no
+dataset passed Holm-adjusted family-wise alpha 0.05. Main conclusion: LAD gives
+strong vertical-outlier stability, while universal out-of-sample superiority is
+not established. OLS remains faster and has lower out-of-fold RMSE.
+
 ## Repository layout
 
 ```text
@@ -88,6 +101,7 @@ python scripts/validate_lad.py
 python scripts/fit_baseline_models.py
 python scripts/run_robustness_experiments.py
 python scripts/evaluate_models.py
+python scripts/run_final_analysis.py
 ```
 
 After installation, this equivalent command is also available:
@@ -98,6 +112,7 @@ validate-lad
 fit-baseline-models
 run-robustness-experiments
 evaluate-models
+run-final-analysis
 ```
 
 ## Test
@@ -124,4 +139,6 @@ See [outlier method notes](docs/outlier_method.md) and
 comparison. The [robustness experiment notes](docs/robustness_experiments.md)
 define the full-data, inlier-only, and controlled-contamination protocol. See
 [formal comparison notes](docs/formal_comparison.md) for paired effects and
-runtime definitions.
+runtime definitions. [Final validation notes](docs/final_validation.md) define
+cross-validation, bootstrap intervals, multiplicity correction, and limits.
+[Final research report](docs/final_research_report.md) provides full synthesis.

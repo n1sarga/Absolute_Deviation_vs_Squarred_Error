@@ -53,8 +53,8 @@ identifiers, and added noise.
 
 Outlier labels were calculated once from the complete observed dataset. That is
 appropriate for this descriptive sensitivity stage but would leak information
-in predictive cross-validation. Later validation must refit diagnostics inside
-each training fold.
+in predictive cross-validation. Final validation avoids this leakage by using
+all training rows and no outlier labels.
 
 ## Current result
 
