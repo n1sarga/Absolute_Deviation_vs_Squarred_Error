@@ -1,5 +1,0 @@
-Dataset,Rows,Predictors,LPObjectiveSAE,ReferenceObjectiveSAE,ObjectiveAbsoluteDifference,ObjectiveRelativeDifference,MaxParameterDifference,MaxPredictionDifference,LPIterations,ObjectiveMatch
-Boston Housing,506,12,1611.011,1611.011,4.547473509e-13,2.822745164e-16,1.470823463e-11,2.904343432e-12,627,True
-Concrete Strength,1030,8,8289.485903,8289.485903,1.818989404e-12,2.194333189e-16,4.831690603e-13,7.389644452e-13,1110,True
-Hawkins-Bradu-Kass (HBK),75,3,86.74286953,86.74286953,1.421085472e-14,1.638273531e-16,5.329070518e-15,3.375077995e-14,87,True
-Synthetic OLS-LAD,90,3,274.6642925,274.6642925,0,0,1.065814104e-14,1.350031198e-13,95,True

@@ -1,5 +1,0 @@
-Dataset,Rows,VariablesUsed,DistanceCutoff,Outliers,OutlierPercent,KnownOutliers,KnownDetected,AdditionalFlags,KnownMissed
-Boston Housing,506,13,4.9735,143,28.2609,,,,
-Concrete Strength,1030,9,4.3615,200,19.4175,,,,
-Hawkins-Bradu-Kass (HBK),75,4,3.3382,14,18.6667,14.0000,14.0000,0.0000,0.0000
-Synthetic OLS-LAD,90,4,3.3382,12,13.3333,,,,
