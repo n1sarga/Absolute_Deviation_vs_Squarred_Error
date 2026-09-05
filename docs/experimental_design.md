@@ -1,6 +1,6 @@
 # Experimental Design
 
-The experiments are restricted to questions directly motivated by the supplied literature on least absolute deviations.
+The experiments are restricted to questions directly motivated by the six core papers retained for the project: Wagner (1959), Barrodale and Roberts (1973), Bassett and Koenker (1978), Bloomfield and Steiger (1980), Narula and Wellington (1982), and Pollard (1991).
 
 ## Research question
 
@@ -24,11 +24,11 @@ OLS and LAD are each fitted using all three HBK predictors (`X1`, `X2`, and `X3`
 
 A controlled regression design is generated internally for this experiment rather than loaded as an empirical dataset. Selected response values are then given deliberately large errors and both OLS and LAD are refitted. The experiment records coefficient change, mean absolute change in fitted values, MAE and RMSE relative to the uncontaminated response, and fit runtime.
 
-The contamination levels 0%, 5%, 10%, and 20% and the chosen error magnitude are project-selected illustration settings. They are not represented as numerical prescriptions from the papers. Their purpose is to operationalize the literature's concern with extreme errors and contaminated observations.
+The contamination levels 0%, 5%, 10%, and 20% and the chosen error magnitude are project-selected illustration settings. They are not represented as numerical prescriptions from the papers. Their purpose is to operationalize the retained literature's concern with extreme errors and contaminated observations.
 
 ## Experiment 3: error distributions
 
-The controlled simulation compares Normal, Laplace, Cauchy, and contaminated-normal errors. These distributions are included because the supplied papers contrast the Gaussian setting with long-tailed/non-Gaussian cases and discuss Laplace, Cauchy, and contaminated-normal situations.
+The controlled simulation compares Normal, Laplace, Cauchy, and contaminated-normal errors. These distributions are included because the retained papers contrast the Gaussian setting with long-tailed/non-Gaussian cases and discuss Laplace, Cauchy, and contaminated-normal situations.
 
 The same true regression coefficients are used for OLS and LAD. Repeated samples are summarized using coefficient estimation error, SSE, SAE, MAE, and RMSE. Only simple descriptive summaries are used.
 
@@ -40,4 +40,4 @@ The repository does not claim that its modern LP solver reproduces the historica
 
 ## Methods deliberately excluded
 
-The active experimental design does not use MCD, Mahalanobis-distance screening, PCA outlier detection, k-fold cross-validation, bootstrap intervals, permutation/randomization tests, Holm correction, or external robust-regression methods because those are outside the supplied methodological basis for this project.
+The active experimental design does not use MCD, Mahalanobis-distance screening, PCA outlier detection, k-fold cross-validation, bootstrap intervals, permutation/randomization tests, Holm correction, or external robust-regression methods because those are outside the six-paper methodological basis for this project.

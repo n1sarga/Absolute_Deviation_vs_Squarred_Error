@@ -1,6 +1,6 @@
 # Literature Compliance Audit
 
-This audit applies to the rebuilt active workflow on `main`.
+This audit applies to the rebuilt active workflow on `main` and uses only the six core papers retained for the project: Wagner (1959), Barrodale & Roberts (1973), Bassett & Koenker (1978), Bloomfield & Steiger (1980), Narula & Wellington (1982), and Pollard (1991).
 
 ## Retained methods
 
@@ -23,7 +23,7 @@ This audit applies to the rebuilt active workflow on `main`.
 - Deviation from paper: a modern LP solver is used rather than a historical simplex implementation. The LP itself follows the literature-supported formulation.
 
 ### HBK multivariate case visualization
-- Supporting basis: the regression residual concepts come from the LAD/OLS literature, while the regular, bad-leverage, and good-leverage labels are already present as `CaseGroup` values in the HBK dataset.
+- Supporting basis: the regression residual concepts come from the retained LAD/OLS literature, while the regular, bad-leverage, and good-leverage labels are already present as `CaseGroup` values in the HBK dataset.
 - Literature concept: compare squared-error and absolute-error regression on observations that include unusual/extreme cases.
 - Implementation: fit OLS and LAD using all three HBK predictors (`X1`, `X2`, `X3`) and plot each observation's absolute OLS residual against its absolute LAD residual. Cases 15-75 are displayed as regular/inlier cases, cases 1-10 as bad-leverage/outlier cases, and cases 11-14 as good-leverage cases.
 - Deviation from paper: no new outlier detector is introduced. The figure preserves the dataset-provided case labels instead of deriving labels through an external statistical procedure.
@@ -46,19 +46,9 @@ This audit applies to the rebuilt active workflow on `main`.
 - Implementation: record wall-clock time for OLS and LP-based LAD over several problem sizes.
 - Deviation from paper: timings are modern and machine-specific; no claim of reproducing historical CPU results is made.
 
-## Literature extensions not implemented
-
-### Two-stage LAD
-- Source: Amemiya (1982).
-- Status: theoretical/literature discussion only because the project studies standard linear regression rather than simultaneous equations.
-
-### Censored LAD
-- Source: Powell (1984).
-- Status: theoretical/literature discussion only because the project does not study censored dependent variables.
-
 ## Removed from the active workflow
 
-The rebuild excludes the following methods because they are not part of the supplied methodological basis for this project:
+The rebuild excludes the following methods because they are not part of the six-paper methodological basis for this project:
 
 - Minimum Covariance Determinant
 - robust Mahalanobis distance
@@ -76,4 +66,4 @@ The HBK `CaseGroup` field is not an externally computed classification in this r
 
 ## Compliance conclusion
 
-The active workflow is limited to squared-loss regression, absolute-loss regression, the literature-supported linear-programming formulation of LAD, descriptive visualization of the existing HBK case groups, direct experiments with extreme response errors and literature-discussed error distributions, and computational comparisons. Any project-specific numerical settings are labeled as experiment settings rather than literature-derived prescriptions.
+The active workflow is limited to squared-loss regression, absolute-loss regression, the literature-supported linear-programming formulation of LAD, descriptive visualization of the existing HBK case groups, direct experiments with extreme response errors and literature-discussed error distributions, asymptotic background, and computational comparisons. Any project-specific numerical settings are labeled as experiment settings rather than literature-derived prescriptions.

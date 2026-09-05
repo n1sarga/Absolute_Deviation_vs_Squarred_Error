@@ -1,6 +1,6 @@
 # Regression by Minimizing Absolute Deviation
 
-This repository is a literature-aligned computational study of ordinary least squares (OLS) and least absolute deviations (LAD) regression. The methodology is intentionally restricted to ideas supported by the supplied LAD literature.
+This repository is a literature-aligned computational study of ordinary least squares (OLS) and least absolute deviations (LAD) regression. The methodology is intentionally restricted to ideas supported by six core LAD papers that directly match the project title and implemented workflow.
 
 ## Project objective
 
@@ -42,16 +42,16 @@ The distinction is deliberate: HBK can be shown with its existing regular/non-re
 
 ## Literature basis
 
+The project now uses only the six papers that are directly relevant to standard regression by minimizing absolute deviation:
+
 1. Wagner, H. M. (1959), *Linear Programming Techniques for Regression Analysis*.
 2. Barrodale, I. and Roberts, F. D. K. (1973), *An Improved Algorithm for Discrete l1 Linear Approximation*.
 3. Bassett, G. and Koenker, R. (1978), *Asymptotic Theory of Least Absolute Error Regression*.
 4. Bloomfield, P. and Steiger, W. (1980), *Least Absolute Deviations Curve-Fitting*.
 5. Narula, S. C. and Wellington, J. F. (1982), *The Minimum Sum of Absolute Errors Regression: A State of the Art Survey*.
-6. Amemiya, T. (1982), *Two Stage Least Absolute Deviations Estimators*.
-7. Powell, J. L. (1984), *Least Absolute Deviations Estimation for the Censored Regression Model*.
-8. Pollard, D. (1991), *Asymptotics for Least Absolute Deviation Regression Estimators*.
+6. Pollard, D. (1991), *Asymptotics for Least Absolute Deviation Regression Estimators*.
 
-Wagner and Barrodale-Roberts provide the linear-programming and computational foundations. Bassett-Koenker, Bloomfield-Steiger, Narula-Wellington and Pollard provide the statistical and robustness basis. Amemiya and Powell are discussed as LAD extensions; 2SLAD and censored LAD are not implemented.
+Wagner and Barrodale-Roberts provide the linear-programming and computational foundations. Bassett-Koenker, Bloomfield-Steiger, Narula-Wellington and Pollard provide the statistical, robustness, computational, and asymptotic basis for standard LAD regression.
 
 ## OLS and LAD objectives
 
@@ -109,7 +109,7 @@ A controlled regression design is generated internally. Deliberately large respo
 
 ### 3. Error-distribution experiment
 
-OLS and LAD are compared under Normal, Laplace/double-exponential, Cauchy/long-tailed and contaminated-normal errors, reflecting distributions discussed in the supplied literature. Only descriptive summaries are used.
+OLS and LAD are compared under Normal, Laplace/double-exponential, Cauchy/long-tailed and contaminated-normal errors, reflecting distributions discussed in the six core papers. Only descriptive summaries are used.
 
 ### 4. Computational comparison
 
@@ -140,7 +140,6 @@ The project does not assume LAD is universally superior. OLS directly optimizes 
 ## Limitations
 
 - The project studies standard linear LAD only.
-- 2SLAD and censored LAD are literature extensions, not implemented models.
 - LAD is not claimed to be immune to all unusual observations, especially extreme predictor configurations.
 - The HBK inlier/outlier visualization uses the dataset's existing case labels; it is not a new outlier-detection algorithm.
 - Boston Housing and Concrete Strength do not have supplied case labels, so their residual plots are descriptive and do not formally classify outliers.

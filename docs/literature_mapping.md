@@ -1,6 +1,6 @@
 # Literature Mapping
 
-This document maps every retained methodological component of the rebuilt repository to the supplied literature. If a method cannot be mapped to these papers, it is excluded from the active workflow.
+This document maps every retained methodological component of the rebuilt repository to the six core papers used by the project. If a method cannot be mapped to these papers, it is excluded from the active workflow.
 
 | Repository component | Supporting literature | Role in this project |
 |---|---|---|
@@ -17,12 +17,21 @@ This document maps every retained methodological component of the rebuilt reposi
 | Cauchy / thick-tailed setting | Narula & Wellington (1982); Pollard (1991) | Supports long-tailed simulation examples. |
 | Asymptotic normality of LAD | Bassett & Koenker (1978); Pollard (1991) | Theoretical background only; not used to add unsupported inference. |
 | Convex criterion perspective | Pollard (1991) | Explains theoretical treatment of LAD minimization. |
-| Two-stage LAD | Amemiya (1982) | Discussed as an extension; not implemented. |
-| Censored LAD | Powell (1984) | Discussed as an extension; not implemented. |
+
+## Core literature retained
+
+1. Wagner (1959)
+2. Barrodale & Roberts (1973)
+3. Bassett & Koenker (1978)
+4. Bloomfield & Steiger (1980)
+5. Narula & Wellington (1982)
+6. Pollard (1991)
+
+These six sources directly support standard regression by minimizing absolute deviation, its statistical interpretation, its computational solution, its behavior under large or long-tailed errors, and its asymptotic properties.
 
 ## Explicit exclusions
 
-The following methods are not part of the rebuilt workflow because they are not part of the supplied methodological basis for this project:
+The following methods are not part of the rebuilt workflow because they are not part of the six-paper methodological basis for this project:
 
 - Minimum Covariance Determinant (MCD)
 - robust Mahalanobis distance
