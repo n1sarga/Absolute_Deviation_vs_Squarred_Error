@@ -9,7 +9,7 @@ The complete executed workflow is available in [`absolute_deviation_full_workflo
 1. Load and prepare the three empirical datasets. [`data.py`](src/absolute_deviation/data.py)
 2. Fit OLS and LAD models using the same observations and predictors. [`models.py`](src/absolute_deviation/models.py)
 3. Compare SSE and SAE on the empirical datasets. [`experiments.py`](src/absolute_deviation/experiments.py)
-4. Compare OLS and LAD under Normal, Laplace, Cauchy, and contaminated-normal errors. [`experiments.py`](src/absolute_deviation/experiments.py)
+4. Compare OLS and LAD under Normal, Laplace, and Cauchy errors using SSE and SAE. [`experiments.py`](src/absolute_deviation/experiments.py)
 5. Benchmark runtime across sample sizes and predictor counts. [`experiments.py`](src/absolute_deviation/experiments.py)
 6. Validate the OLS and LAD implementations. [`experiments.py`](src/absolute_deviation/experiments.py)
 7. Generate the HBK multivariate residual visualization. [`plotting.py`](src/absolute_deviation/plotting.py)
