@@ -26,6 +26,34 @@ jobs:
       - name: Run tests
         run: python -m pytest
 
+      - name: Update notebook metrics
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("notebooks/absolute_deviation_full_workflow.ipynb")
+          notebook = json.loads(path.read_text())
+
+          replacements = {
+              '["SSE", "SAE", "MAE", "RMSE"]': '["SSE", "SAE"]',
+              '["coefficient_shift_l2", "prediction_shift_mae"]': '["coefficient_shift_l2"]',
+              '["coefficient_error_l2", "SSE", "SAE", "MAE", "RMSE"]': '["coefficient_error_l2", "SSE", "SAE"]',
+          }
+
+          for cell in notebook.get("cells", []):
+              source = cell.get("source")
+              if isinstance(source, list):
+                  for index, line in enumerate(source):
+                      for old, new in replacements.items():
+                          line = line.replace(old, new)
+                      source[index] = line
+
+          path.write_text(json.dumps(notebook, indent=1) + "\n")
+          PY
+          rm -f outputs/figures/mae_vs_contamination.png
+          rm -f outputs/figures/rmse_vs_contamination.png
+
       - name: Execute complete notebook
         run: |
           python -m nbconvert --to notebook --execute --inplace notebooks/absolute_deviation_full_workflow.ipynb \

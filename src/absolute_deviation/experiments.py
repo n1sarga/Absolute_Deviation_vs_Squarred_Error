@@ -43,7 +43,6 @@ def run_original_data() -> tuple[pd.DataFrame, pd.DataFrame]:
                     "dataset": name,
                     "model": result.model,
                     **metrics,
-                    "runtime_seconds": result.runtime_seconds,
                 }
             )
             coef_rows.extend(_coefficient_rows(name, result, columns))
@@ -91,14 +90,12 @@ def run_contamination_experiment(
                 beta_result = np.concatenate([[result.intercept], result.coefficients])
                 beta_base = np.concatenate([[base[result.model].intercept], base[result.model].coefficients])
                 coefficient_shift = float(np.linalg.norm(beta_result - beta_base))
-                prediction_shift = float(np.mean(np.abs(result.fitted - base[result.model].fitted)))
                 metric_rows.append(
                     {
                         "contamination_fraction": level,
                         "repetition": rep,
                         "model": result.model,
                         **metrics,
-                        "runtime_seconds": result.runtime_seconds,
                     }
                 )
                 shift_rows.append(
@@ -107,7 +104,6 @@ def run_contamination_experiment(
                         "repetition": rep,
                         "model": result.model,
                         "coefficient_shift_l2": coefficient_shift,
-                        "prediction_shift_mae": prediction_shift,
                     }
                 )
     metrics_df = pd.DataFrame(metric_rows)

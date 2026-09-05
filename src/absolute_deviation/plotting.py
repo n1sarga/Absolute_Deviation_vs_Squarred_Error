@@ -46,8 +46,8 @@ def plot_contamination_results() -> None:
     metrics = pd.read_csv(RESULT_DIR / "contamination_metrics.csv")
     shifts = pd.read_csv(RESULT_DIR / "contamination_coefficient_changes.csv")
     for frame, value, ylabel, filename in (
-        (metrics, "MAE", "MAE evaluated against clean responses", "mae_vs_contamination.png"),
-        (metrics, "RMSE", "RMSE evaluated against clean responses", "rmse_vs_contamination.png"),
+        (metrics, "SSE", "SSE evaluated against clean responses", "sse_vs_contamination.png"),
+        (metrics, "SAE", "SAE evaluated against clean responses", "sae_vs_contamination.png"),
         (shifts, "coefficient_shift_l2", "Coefficient change from clean fit", "coefficient_shift_vs_contamination.png"),
     ):
         summary = frame.groupby(["contamination_fraction", "model"], as_index=False)[value].mean()

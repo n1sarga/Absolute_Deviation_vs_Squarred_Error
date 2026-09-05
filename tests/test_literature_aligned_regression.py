@@ -49,7 +49,5 @@ def test_contamination_experiment_is_deterministic(tmp_path, monkeypatch):
     monkeypatch.setattr(exp, "FIGURE_DIR", tmp_path / "figures")
     a, b = run_contamination_experiment(contamination_levels=(0.0, 0.1), repetitions=2, seed=77)
     c, d = run_contamination_experiment(contamination_levels=(0.0, 0.1), repetitions=2, seed=77)
-    numeric_a = a.drop(columns=["runtime_seconds"]).select_dtypes("number")
-    numeric_c = c.drop(columns=["runtime_seconds"]).select_dtypes("number")
-    assert np.allclose(numeric_a, numeric_c, rtol=1e-10, atol=1e-10)
+    assert np.allclose(a.select_dtypes("number"), c.select_dtypes("number"), rtol=1e-10, atol=1e-10)
     assert np.allclose(b.select_dtypes("number"), d.select_dtypes("number"), rtol=1e-10, atol=1e-10)

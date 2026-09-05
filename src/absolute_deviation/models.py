@@ -115,6 +115,4 @@ def regression_metrics(y: np.ndarray, fitted: np.ndarray) -> dict[str, float]:
     return {
         "SSE": float(np.dot(residuals, residuals)),
         "SAE": float(np.abs(residuals).sum()),
-        "MAE": float(np.abs(residuals).mean()),
-        "RMSE": float(np.sqrt(np.mean(residuals**2))),
     }
