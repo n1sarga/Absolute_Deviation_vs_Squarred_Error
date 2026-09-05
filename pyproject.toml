@@ -4,26 +4,19 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "absolute-deviation-regression"
-version = "0.1.0"
-description = "Reproducible outlier analysis and least-absolute-deviation regression"
+version = "0.2.0"
+description = "Literature-aligned comparison of ordinary least squares and least absolute deviations regression"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "matplotlib>=3.7",
     "numpy>=1.24",
     "pandas>=2.0",
-    "scikit-learn>=1.2",
     "scipy>=1.9",
-    "seaborn>=0.12",
 ]
 
 [project.scripts]
-analyze-outliers = "outlier_analysis.pipeline:main"
-validate-lad = "outlier_analysis.lad_validation:main"
-fit-baseline-models = "outlier_analysis.baseline:main"
-run-robustness-experiments = "outlier_analysis.robustness:main"
-evaluate-models = "outlier_analysis.evaluation:main"
-run-final-analysis = "outlier_analysis.final_analysis:main"
+generate-all-results = "absolute_deviation.experiments:generate_all_results"
 
 [tool.setuptools.packages.find]
 where = ["src"]
