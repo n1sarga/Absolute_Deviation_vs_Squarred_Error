@@ -26,20 +26,5 @@ jobs:
       - name: Run tests
         run: python -m pytest
 
-      - name: Run analysis workflow
-        run: python scripts/analyze_outliers.py
-
-      - name: Validate LAD solver
-        run: python scripts/validate_lad.py
-
-      - name: Fit OLS and LAD baselines
-        run: python scripts/fit_baseline_models.py
-
-      - name: Run robustness experiments
-        run: python scripts/run_robustness_experiments.py
-
-      - name: Evaluate OLS and LAD
-        run: python scripts/evaluate_models.py
-
-      - name: Run final validation
-        run: python scripts/run_final_analysis.py
+      - name: Regenerate literature-aligned results
+        run: python scripts/generate_all_results.py
