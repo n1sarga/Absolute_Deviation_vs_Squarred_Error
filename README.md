@@ -4,50 +4,16 @@ This project compares Ordinary Least Squares (OLS) and Least Absolute Deviations
 
 The complete executed workflow is available in [`notebooks/absolute_deviation_full_workflow.ipynb`](notebooks/absolute_deviation_full_workflow.ipynb).
 
-## Objective
-
-> How does regression obtained by minimizing absolute deviations differ from regression obtained by minimizing squared deviations, particularly when observations contain large or extreme errors?
-
-For residuals
-
-$$
-r_i = y_i - x_i^T\beta,
-$$
-
-OLS minimizes
-
-$$
-\min_{\beta}\sum_{i=1}^{n} r_i^2,
-$$
-
-while LAD minimizes
-
-$$
-\min_{\beta}\sum_{i=1}^{n} |r_i|.
-$$
-
-For the linear-programming formulation of LAD,
-
-$$
-r_i = e_i^+ - e_i^-, \qquad e_i^+ \ge 0, \quad e_i^- \ge 0,
-$$
-
-with objective
-
-$$
-\min \sum_{i=1}^{n}\left(e_i^+ + e_i^-\right).
-$$
-
-## Workflow
+## Experimental workflow
 
 1. Load and prepare the three empirical datasets.
-2. Fit OLS and LAD models using the same observations and predictors.
+2. Fit OLS and LAD using the same observations and predictors.
 3. Compare SSE, SAE, MAE, RMSE, coefficients, and runtime.
 4. Visualize fitted values and multivariate residual behavior.
 5. Run the controlled large-response-error experiment.
 6. Compare OLS and LAD under Normal, Laplace, Cauchy, and contaminated-normal errors.
 7. Benchmark runtime across sample sizes and predictor counts.
-8. Validate that OLS minimizes squared error and LAD minimizes absolute error on deterministic examples.
+8. Validate the OLS and LAD implementations.
 9. Generate all result tables, figures, and the executed notebook.
 
 ## Empirical visualizations
