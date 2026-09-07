@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+<rect width="100%" height="100%" fill="white"/>
+<text x="400.0" y="32" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="bold" fill="#222222">OLS vs LAD SAE on Benchmark Datasets</text>
+<line x1="90" y1="375.1" x2="760" y2="375.1" stroke="#D9D9D9" stroke-width="1"/>
+<text x="78" y="380.10245200595455" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#222222">100</text>
+<line x1="90" y1="226.0" x2="760" y2="226.0" stroke="#D9D9D9" stroke-width="1"/>
+<text x="78" y="230.9560259329813" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#222222">1,000</text>
+<line x1="90" y1="76.8" x2="760" y2="76.8" stroke="#D9D9D9" stroke-width="1"/>
+<text x="78" y="81.809599860008" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#222222">10,000</text>
+<line x1="90" y1="65" x2="90" y2="420" stroke="#555555" stroke-width="1.2"/>
+<line x1="90" y1="420" x2="760" y2="420" stroke="#555555" stroke-width="1.2"/>
+<rect x="143" y="191.7" width="52" height="228.3" fill="#4C78A8"/>
+<rect x="205" y="195.1" width="52" height="224.9" fill="#F58518"/>
+<text x="200" y="448" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#222222">Boston Housing</text>
+<text x="169.0" y="183.6505474355567" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" fill="#222222">1698.3</text>
+<text x="231.0" y="187.06802398856948" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" fill="#222222">1611.0</text>
+<rect x="368" y="87.6" width="52" height="332.4" fill="#4C78A8"/>
+<rect x="430" y="89.0" width="52" height="331.0" fill="#F58518"/>
+<text x="425" y="448" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#222222">Concrete Strength</text>
+<text x="394.0" y="79.63174302249536" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" fill="#222222">8461.3</text>
+<text x="456.0" y="80.96091753431602" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" fill="#222222">8289.5</text>
+<rect x="593" y="372.9" width="52" height="47.1" fill="#4C78A8"/>
+<rect x="655" y="384.3" width="52" height="35.7" fill="#F58518"/>
+<text x="650" y="448" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#222222">HBK</text>
+<text x="619.0" y="364.89358092621495" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" fill="#222222">103.5</text>
+<text x="681.0" y="376.3146618904445" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="normal" fill="#222222">86.7</text>
+<text x="25" y="242.5" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#222222" transform="rotate(-90 25 242.5)">SAE (log scale)</text>
+<rect x="620" y="48" width="16" height="12" fill="#4C78A8"/><text x="642" y="59" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#222222">OLS</text>
+<rect x="690" y="48" width="16" height="12" fill="#F58518"/><text x="712" y="59" text-anchor="start" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#222222">LAD</text>
+</svg>
