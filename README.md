@@ -12,7 +12,7 @@ The complete executed workflow is available in [`absolute_deviation_full_workflo
 4. Compare OLS and LAD under Normal, Laplace, and Cauchy errors using SSE and SAE. [`experiments.py`](src/absolute_deviation/experiments.py)
 5. Benchmark runtime across sample sizes and predictor counts. [`experiments.py`](src/absolute_deviation/experiments.py)
 6. Validate the OLS and LAD implementations. [`experiments.py`](src/absolute_deviation/experiments.py)
-7. Generate the HBK multivariate residual visualization. [`plotting.py`](src/absolute_deviation/plotting.py)
+7. Generate report visualizations from the saved results and HBK data. [`plotting.py`](src/absolute_deviation/plotting.py)
 8. Save result tables and execute the complete notebook.
 
 ## Key visualization
@@ -26,7 +26,8 @@ The complete executed workflow is available in [`absolute_deviation_full_workflo
 ```powershell
 python -m pip install -r requirements-dev.txt
 python scripts/generate_all_results.py
+python scripts/generate_figures.py
 python -m pytest
 ```
 
-Generated result tables are stored in `outputs/results/`. The retained figure is stored in `outputs/figures/`.
+Generated result tables are stored in `outputs/results/`. Generated figures are stored in `outputs/figures/`.
